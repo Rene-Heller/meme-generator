@@ -1,0 +1,89 @@
+import { Canvas, FabricImage, Textbox } from "fabric";
+
+export async function createImage(i,imgArray) {
+  const img = await FabricImage.fromURL(imgArray[i]);
+  const imgWidth = img.width;
+  const imgHeight = img.height;
+
+  img.set({
+    left: imgWidth / 2,
+    top: imgHeight / 2,
+    originX: 'center',
+    originY: 'center',
+    scaleX: 1,
+    scaleY: 1,
+    selectable: false,
+    evented: false
+  });
+  return { img, imgWidth, imgHeight }
+};
+
+
+export function createCanvas(img, width, height) {
+  const fabricCanvas = new Canvas("meme-editor", {
+    width: width,
+    height: height,
+    preserveObjectStacking: true
+  });
+
+  fabricCanvas.add(img);
+  fabricCanvas.sendObjectToBack(img);
+  return fabricCanvas;
+};
+
+
+export function addText(fabricCanvas) {
+
+  const text = new Textbox("MEME TEXT", {
+
+    left: 100,
+    top: 100,
+    width: 300,
+    fontSize: 48,
+    fontFamily: "Impact",
+    fill: "#ffffff",
+    stroke: "#000000",
+    strokeWidth: 3,
+    textAlign: "center",
+    editable: true
+
+  });
+
+  fabricCanvas.add(text);
+  fabricCanvas.setActiveObject(text);
+};
+
+
+export function exportMeme(fabricCanvas) {
+
+  const png = fabricCanvas.toDataURL({
+    format: "png",
+    quality: 1
+  });
+
+  const img = document.createElement("img");
+
+  img.src = png;
+
+  document.body.appendChild(img);
+
+  const a = document.createElement("a");
+
+  // a.href = png;
+  // a.download = "meme.png";
+
+  a.click();
+};
+
+
+export function bindColorInput(elementId, property) {
+  document.getElementById(elementId).addEventListener("input", (element) => {
+    const active = fabricCanvas.getActiveObject();
+
+    if (!active) return;
+
+    active.set(property, element.target.value);
+
+    fabricCanvas.renderAll();
+  });
+}
