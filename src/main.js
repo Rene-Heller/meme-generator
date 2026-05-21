@@ -7,6 +7,8 @@ import { returnMemeEditor } from './template.js';
 import { Canvas, FabricImage, Textbox } from "fabric";
 import { createImage, createCanvas, addText, exportMeme, bindColorInput } from './fabric.js'
 
+let generatedUrl;
+let fabricCanvas;
 
 const imageArray = [
   "src/assets/BadLuckBrian.png",
@@ -30,8 +32,6 @@ document.querySelector('#app').innerHTML = `
 `;
 
 
-let generatedUrl;
-let fabricCanvas;
 const templateSelect = document.getElementById('templateSelect');
 
 async function openEdit(i) {
@@ -76,7 +76,9 @@ function setupEditorEvents() {
   document
     .getElementById("exportBtn")
     .addEventListener("click", () => {
-      exportMeme(fabricCanvas)
+      exportMeme(fabricCanvas,()=>{
+        document.getElementById("close-dialog-btn").click()
+      })
     }
   );
 

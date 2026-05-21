@@ -54,7 +54,7 @@ export function addText(fabricCanvas) {
 };
 
 
-export function exportMeme(fabricCanvas) {
+export function exportMeme(fabricCanvas,callback) {
 
   const png = fabricCanvas.toDataURL({
     format: "png",
@@ -66,13 +66,15 @@ export function exportMeme(fabricCanvas) {
   img.src = png;
 
   document.body.appendChild(img);
-
-  const a = document.createElement("a");
+  if(callback){
+    callback()
+  }
+//   const a = document.createElement("a");
 
   // a.href = png;
   // a.download = "meme.png";
 
-  a.click();
+//   a.click();
 };
 
 
