@@ -20,6 +20,6 @@ export function returnMemeEditor(){
     
         </div>
     
-        <canvas id="meme-editor"></canvas>
+        <canvas id="meme-editor" tabindex="1"></canvas>
       `
 }

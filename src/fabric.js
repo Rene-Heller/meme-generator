@@ -1,7 +1,7 @@
-import { Canvas, FabricImage, Textbox } from "fabric";
+import { Canvas, FabricImage, IText } from "fabric";
 
 export async function createImage(i,imgArray) {
-  const img = await FabricImage.fromURL(imgArray[i]);
+  const img = await FabricImage.fromURL(imgArray[i].localUrl);
   const imgWidth = img.width;
   const imgHeight = img.height;
 
@@ -20,37 +20,46 @@ export async function createImage(i,imgArray) {
 
 
 export function createCanvas(img, width, height) {
-  const fabricCanvas = new Canvas("meme-editor", {
-    width: width,
-    height: height,
-    preserveObjectStacking: true
+  const canvasElement = document.getElementById("meme-editor");
+  canvasElement.width = width;
+  canvasElement.height = height;
+  
+  const fabricCanvas = new Canvas(canvasElement, {
+    preserveObjectStacking: true,
+    enableRetinaScaling: false
   });
 
   fabricCanvas.add(img);
   fabricCanvas.sendObjectToBack(img);
+  
   return fabricCanvas;
 };
 
 
 export function addText(fabricCanvas) {
 
-  const text = new Textbox("MEME TEXT", {
+  const text = new IText("MEME TEXT", {
 
     left: 100,
     top: 100,
-    width: 300,
     fontSize: 48,
     fontFamily: "Impact",
     fill: "#ffffff",
     stroke: "#000000",
     strokeWidth: 3,
-    textAlign: "center",
-    editable: true
+    textAlign: "center"
 
   });
 
   fabricCanvas.add(text);
   fabricCanvas.setActiveObject(text);
+  fabricCanvas.renderAll();
+  
+  // Set focus to canvas for keyboard input
+  const canvasElement = document.getElementById("meme-editor");
+  if (canvasElement) {
+    canvasElement.focus();
+  }
 };
 
 
@@ -78,7 +87,7 @@ export function exportMeme(fabricCanvas,callback) {
 };
 
 
-export function bindColorInput(elementId, property) {
+export function bindColorInput(fabricCanvas, elementId, property) {
   document.getElementById(elementId).addEventListener("input", (element) => {
     const active = fabricCanvas.getActiveObject();
 

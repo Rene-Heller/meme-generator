@@ -4,19 +4,19 @@ import './style.css';
 // import heroImg from './assets/hero.png';
 import { supabase } from './supabase.js';
 import { returnMemeEditor } from './template.js';
-import { Canvas, FabricImage, Textbox } from "fabric";
+import { Canvas, FabricImage } from "fabric";
 import { createImage, createCanvas, addText, exportMeme, bindColorInput } from './fabric.js'
 
 let generatedUrl;
 let fabricCanvas;
 
 const imageArray = [
-  "src/assets/BadLuckBrian.png",
-  "src/assets/UnsettledTom.png",
-  "src/assets/spongebobrainbow.png",
-  "src/assets/SpongebobBurningPaper.png",
-  "src/assets/Whowantstobeamillionaire.png",
-  "src/assets/GooseChase.png"
+  // "src/assets/BadLuckBrian.png",
+  // "src/assets/UnsettledTom.png",
+  // "src/assets/spongebobrainbow.png",
+  // "src/assets/SpongebobBurningPaper.png",
+  // "src/assets/Whowantstobeamillionaire.png",
+  // "src/assets/GooseChase.png"
 ];
 
 document.querySelector('#app').innerHTML = `
@@ -25,9 +25,9 @@ document.querySelector('#app').innerHTML = `
 <div id="templateSelect"></div>
 <div id="dialog-container">
   
-  <dialog id="meme-edit-dialog">
+  <div class="d-none" id="meme-edit-dialog">
   
-  </dialog>
+  </div>
 </div>
 `;
 
@@ -35,17 +35,18 @@ document.querySelector('#app').innerHTML = `
 const templateSelect = document.getElementById('templateSelect');
 
 async function openEdit(i) {
-
+  
   const dialog = document.getElementById("meme-edit-dialog");
   dialog.innerHTML = returnMemeEditor();
   setupDialogEvents();
-  dialog.showModal();
+  dialog.classList.remove("d-none");
 
+  
   const { img, imgWidth, imgHeight } = await createImage(i, imageArray);
   const canvasElement = document.getElementById("meme-editor");
   canvasElement.width = imgWidth;
   canvasElement.height = imgHeight;
-
+  
   fabricCanvas = createCanvas(img, imgWidth, imgHeight);
   fabricCanvas.renderAll()
 
@@ -82,8 +83,8 @@ function setupEditorEvents() {
     }
   );
 
-  bindColorInput("fillColor", "fill");
-  bindColorInput("strokeColor", "stroke");
+  bindColorInput(fabricCanvas, "fillColor", "fill");
+  bindColorInput(fabricCanvas, "strokeColor", "stroke");
 
 };
 
@@ -106,22 +107,32 @@ async function getImageFiles(files) {
       }
     )
   });
+
+   for (const element of imageArray) {
+    const response = await fetch(element.publicUrl);
+    const blob = await response.blob();
+
+    element.localUrl = URL.createObjectURL(blob);
+  }
+
+  console.log(imageArray)
+
   return imageArray
 }
 
 async function loadTemplates() {
-  // const { data: files, error } = await supabase.storage
-  //   .from('meme-templates')
-  //   .list();
+  const { data: files, error } = await supabase.storage
+    .from('meme-templates')
+    .list();
 
-  const images = imageArray;
-  // const images = await getImageFiles(files);
+  // const images = imageArray;
+  const images = await getImageFiles(files);
 
 
-  // if (error) {
-  //   console.error(error);
-  //   return;
-  // }
+  if (error) {
+    console.error(error);
+    return;
+  }
 
   images.forEach((file) => {
     //   const option = document.createElement('img');
@@ -132,17 +143,19 @@ async function loadTemplates() {
     // ${file.filename}
     templateSelect.innerHTML += `
     <button id="meme-${imageArray.indexOf(file)}" class="create-meme-btn">
-      <img class="template-meme" src="${imageArray[imageArray.indexOf(file)]}" alt="">    
+      <img class="template-meme" src="${imageArray[imageArray.indexOf(file)].publicUrl}" alt="">    
     </button>
        
     `
   });
+  setupOpenMemeEvents()
 }
 
 function setupOpenMemeEvents() {
   const buttons = document.querySelectorAll(".create-meme-btn");
 
   buttons.forEach((button, index) => {
+    console.log(index)
     button.children[0].addEventListener("click", () => {
       openEdit(index);
     });
@@ -151,4 +164,4 @@ function setupOpenMemeEvents() {
 
 
 loadTemplates();
-setupOpenMemeEvents()
+
