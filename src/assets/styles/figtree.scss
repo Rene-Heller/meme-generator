@@ -1,0 +1,143 @@
+// Figtree Font Setup
+// Complete font-face declarations for all weights and styles
+
+// Regular (400)
+@font-face {
+  font-family: 'Figtree';
+  src: url('/src/assets/fonts/static/Figtree-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+// Italic (400)
+@font-face {
+  font-family: 'Figtree';
+  src: url('/src/assets/fonts/static/Figtree-Italic.ttf') format('truetype');
+  font-weight: 400;
+  font-style: italic;
+}
+
+// Light (300)
+@font-face {
+  font-family: 'Figtree';
+  src: url('/src/assets/fonts/static/Figtree-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+}
+
+// Light Italic (300)
+@font-face {
+  font-family: 'Figtree';
+  src: url('/src/assets/fonts/static/Figtree-LightItalic.ttf') format('truetype');
+  font-weight: 300;
+  font-style: italic;
+}
+
+// Medium (500)
+@font-face {
+  font-family: 'Figtree';
+  src: url('/src/assets/fonts/static/Figtree-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+}
+
+// Medium Italic (500)
+@font-face {
+  font-family: 'Figtree';
+  src: url('/src/assets/fonts/static/Figtree-MediumItalic.ttf') format('truetype');
+  font-weight: 500;
+  font-style: italic;
+}
+
+// SemiBold (600)
+@font-face {
+  font-family: 'Figtree';
+  src: url('/src/assets/fonts/static/Figtree-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+}
+
+// SemiBold Italic (600)
+@font-face {
+  font-family: 'Figtree';
+  src: url('/src/assets/fonts/static/Figtree-SemiBoldItalic.ttf') format('truetype');
+  font-weight: 600;
+  font-style: italic;
+}
+
+// Bold (700)
+@font-face {
+  font-family: 'Figtree';
+  src: url('/src/assets/fonts/static/Figtree-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+// Bold Italic (700)
+@font-face {
+  font-family: 'Figtree';
+  src: url('/src/assets/fonts/static/Figtree-BoldItalic.ttf') format('truetype');
+  font-weight: 700;
+  font-style: italic;
+}
+
+// ExtraBold (800)
+@font-face {
+  font-family: 'Figtree';
+  src: url('/src/assets/fonts/static/Figtree-ExtraBold.ttf') format('truetype');
+  font-weight: 800;
+  font-style: normal;
+}
+
+// ExtraBold Italic (800)
+@font-face {
+  font-family: 'Figtree';
+  src: url('/src/assets/fonts/static/Figtree-ExtraBoldItalic.ttf') format('truetype');
+  font-weight: 800;
+  font-style: italic;
+}
+
+// Black (900)
+@font-face {
+  font-family: 'Figtree';
+  src: url('/src/assets/fonts/static/Figtree-Black.ttf') format('truetype');
+  font-weight: 900;
+  font-style: normal;
+}
+
+// Black Italic (900)
+@font-face {
+  font-family: 'Figtree';
+  src: url('/src/assets/fonts/static/Figtree-BlackItalic.ttf') format('truetype');
+  font-weight: 900;
+  font-style: italic;
+}
+
+// Optional: Define CSS classes for quick font-weight access
+.font-light {
+  font-weight: 300;
+}
+
+.font-regular {
+  font-weight: 400;
+}
+
+.font-medium {
+  font-weight: 500;
+}
+
+.font-semibold {
+  font-weight: 600;
+}
+
+.font-bold {
+  font-weight: 700;
+}
+
+.font-extrabold {
+  font-weight: 800;
+}
+
+.font-black {
+  font-weight: 900;
+}

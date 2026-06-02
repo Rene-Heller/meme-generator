@@ -1,0 +1,47 @@
+@use 'assets/styles/figtree';
+
+*{
+    margin: 0;
+    font-family: 'Figtree', sans-serif;
+}
+
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 32px;
+    background-color: #09212A;
+    height: 100px;
+    filter: drop-shadow(2px 2px 6px rgba(10, 10, 10, 0.2));
+}
+
+header>div {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    position: relative;
+}
+
+header>div img {
+    position: absolute;
+    left: 0;
+}
+
+header>div>p {
+    font-size: 32px;
+    font-weight: bold;
+    color: white;
+}
+
+header>div>p>span {
+    color: #FD5B4F;
+    font-size: 38px;
+}
+
+;
+
+.dialog-container {
+    position: absolute;
+}
