@@ -78,12 +78,7 @@ export function exportMeme(fabricCanvas,callback) {
   if(callback){
     callback()
   }
-//   const a = document.createElement("a");
 
-  // a.href = png;
-  // a.download = "meme.png";
-
-//   a.click();
 };
 
 

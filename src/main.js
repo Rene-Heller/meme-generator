@@ -13,12 +13,7 @@ document.querySelector('#app').innerHTML = `
 <div id="card">
 </div>
 <div id="templateSelect"></div>
-<div id="dialog-container">
-  
-  <div class="d-none" id="meme-edit-dialog">
-  
-  </div>
-</div>
+
 `;
 
 
@@ -26,10 +21,11 @@ const templateSelect = document.getElementById('templateSelect');
 
 async function openEdit(i) {
   
+  const dialogContainer = document.getElementById('dialog-container')
   const dialog = document.getElementById("meme-edit-dialog");
   dialog.innerHTML = returnMemeEditor();
   setupDialogEvents();
-  dialog.classList.remove("d-none");
+  dialogContainer.classList.remove("d-none");
 
   
   const { img, imgWidth, imgHeight } = await createImage(i, imageArray);
@@ -46,10 +42,11 @@ async function openEdit(i) {
 
 function setupDialogEvents() {
   const btn = document.getElementById("close-dialog-btn");
-  const dialog = document.getElementById("meme-edit-dialog");
+    const dialogContainer = document.getElementById('dialog-container')
+ 
 
   btn.addEventListener("click", () => {
-    dialog.close()
+    dialogContainer.classList.add("d-none");
   },
     { once: true }
   );
@@ -79,8 +76,8 @@ function setupEditorEvents() {
 };
 
 function closeDialog() {
-  const dialog = document.getElementById("meme-edit-dialog");
-  dialog.close()
+  const dialogContainer = document.getElementById('dialog-container')
+ dialogContainer.classList.add("d-none");
 }
 
 async function getImageFiles(files) {
@@ -115,7 +112,6 @@ async function loadTemplates() {
     .from('meme-templates')
     .list();
 
-  // const images = imageArray;
   const images = await getImageFiles(files);
 
 
@@ -125,12 +121,6 @@ async function loadTemplates() {
   }
 
   images.forEach((file) => {
-    //   const option = document.createElement('img');
-    //   option.loading = "lazy";
-    //   option.src = file.publicUrl;
-    //   console.log(file.filename, 'filename');
-    //   option.textContent = file.name;
-    // ${file.filename}
     templateSelect.innerHTML += `
     <button id="meme-${imageArray.indexOf(file)}" class="create-meme-btn">
       <img class="template-meme" src="${imageArray[imageArray.indexOf(file)].publicUrl}" alt="">    

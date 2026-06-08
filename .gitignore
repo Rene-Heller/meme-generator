@@ -2,3 +2,4 @@ node_modules
 dodged
 *environment.js
 *style.css.map
+.env
