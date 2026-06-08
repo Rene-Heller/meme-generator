@@ -4,20 +4,22 @@
     margin-bottom: 16px;
     background-color: #09212a;
     margin-top: 8px;
-    padding: 12px 0 24px
+    padding: 12px 0 24px;
+    min-height: calc(100vh - 324px);
 }
 
 body {
     margin: 0;
     font-family: 'Figtree', sans-serif;
     background-color: #06171e;
+    box-sizing: border-box;
 }
 
 header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 20px 32px;
+    padding: 0 20px 32px;
     background-color: #09212A;
     height: 100px;
     filter: drop-shadow(2px 2px 6px rgba(10, 10, 10, 0.2));
@@ -47,6 +49,35 @@ header>div>h1>span {
     color: #FD5B4F;
     font-size: 48px;
 }
+
+nav{
+    position: absolute;
+    bottom: 0;
+    right:0;
+    margin-right: 16px;
+}
+
+ul {
+    list-style: none;
+    color: white;
+    display: flex;
+    gap:16px;
+
+    li{
+        text-decoration: underline;
+
+        &:hover{
+            color:#FD5B4F;
+            cursor: pointer;
+        }
+
+        
+    }
+}
+
+.active{
+            color:#FD5B4F
+        }
 
 footer {
     position: relative;
@@ -125,7 +156,7 @@ footer {
     display: flex;
 }
 
-.d-none{
+.d-none {
     display: none;
 }
 
@@ -137,7 +168,7 @@ footer {
 
     }
 
-    #meme-edit-dialog{
+    #meme-edit-dialog {
         transform: scale(0.7);
     }
 }

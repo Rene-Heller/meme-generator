@@ -23,3 +23,11 @@ export function returnMemeEditor(){
         <canvas id="meme-editor" tabindex="1"></canvas>
       `
 }
+
+
+export function renderGenerated(){
+  console.log("hallo")
+const templateSelect = document.getElementById('templateSelect');
+templateSelect.innerHTML=''
+
+}

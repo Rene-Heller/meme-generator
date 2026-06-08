@@ -1,8 +1,9 @@
 import './style.css';
 import { supabase } from './scripts/supabase.js';
-import { returnMemeEditor } from './scripts/template.js';
+import { renderGenerated, returnMemeEditor } from './scripts/template.js';
 import { Canvas, FabricImage } from "fabric";
 import { createImage, createCanvas, addText, exportMeme, bindColorInput } from './scripts/fabric.js'
+import { navigate } from './scripts/navigation.js';
 
 let generatedUrl;
 let fabricCanvas;
@@ -20,19 +21,19 @@ document.querySelector('#app').innerHTML = `
 const templateSelect = document.getElementById('templateSelect');
 
 async function openEdit(i) {
-  
+
   const dialogContainer = document.getElementById('dialog-container')
   const dialog = document.getElementById("meme-edit-dialog");
   dialog.innerHTML = returnMemeEditor();
   setupDialogEvents();
   dialogContainer.classList.remove("d-none");
 
-  
+
   const { img, imgWidth, imgHeight } = await createImage(i, imageArray);
   const canvasElement = document.getElementById("meme-editor");
   canvasElement.width = imgWidth;
   canvasElement.height = imgHeight;
-  
+
   fabricCanvas = createCanvas(img, imgWidth, imgHeight);
   fabricCanvas.renderAll()
 
@@ -42,8 +43,8 @@ async function openEdit(i) {
 
 function setupDialogEvents() {
   const btn = document.getElementById("close-dialog-btn");
-    const dialogContainer = document.getElementById('dialog-container')
- 
+  const dialogContainer = document.getElementById('dialog-container')
+
 
   btn.addEventListener("click", () => {
     dialogContainer.classList.add("d-none");
@@ -64,23 +65,42 @@ function setupEditorEvents() {
   document
     .getElementById("exportBtn")
     .addEventListener("click", () => {
-      exportMeme(fabricCanvas,()=>{
+      exportMeme(fabricCanvas, () => {
         document.getElementById("close-dialog-btn").click()
       })
     }
-  );
+    );
 
   bindColorInput(fabricCanvas, "fillColor", "fill");
   bindColorInput(fabricCanvas, "strokeColor", "stroke");
 
 };
 
+function setupNavigationEvents() {
+  const links = document.querySelectorAll('li')
+  console.log(links)
+  links.forEach((element) => {
+    element.addEventListener('click', () => {
+      const id = element.id
+      if (id == "nav-edit") {
+        navigate(id, 'active', loadTemplates),
+          { once: true }
+      }
+      else {
+        navigate(id, 'active', renderGenerated),
+          { once: true }
+      }
+    })
+  })
+}
+
 function closeDialog() {
   const dialogContainer = document.getElementById('dialog-container')
- dialogContainer.classList.add("d-none");
+  dialogContainer.classList.add("d-none");
 }
 
 async function getImageFiles(files) {
+  if (imageArray.length > 0) return imageArray
 
   files.map((file) => {
     const {
@@ -95,7 +115,7 @@ async function getImageFiles(files) {
     )
   });
 
-   for (const element of imageArray) {
+  for (const element of imageArray) {
     const response = await fetch(element.publicUrl);
     const blob = await response.blob();
 
@@ -108,17 +128,23 @@ async function getImageFiles(files) {
 }
 
 async function loadTemplates() {
-  const { data: files, error } = await supabase.storage
-    .from('meme-templates')
-    .list();
+  let images;
+  if (imageArray.length === 0) {
+    const { data: files, error } = await supabase.storage
+      .from('meme-templates')
+      .list();
 
-  const images = await getImageFiles(files);
-
-
-  if (error) {
-    console.error(error);
-    return;
+    images = await getImageFiles(files);
+    if (error) {
+      console.error(error);
+      return;
+    }
+  } else {
+    images = imageArray
   }
+
+
+  templateSelect.innerHTML = '';
 
   images.forEach((file) => {
     templateSelect.innerHTML += `
@@ -128,7 +154,8 @@ async function loadTemplates() {
        
     `
   });
-  setupOpenMemeEvents()
+  setupOpenMemeEvents();
+
 }
 
 function setupOpenMemeEvents() {
@@ -138,10 +165,12 @@ function setupOpenMemeEvents() {
     console.log(index)
     button.children[0].addEventListener("click", () => {
       openEdit(index);
+      { once: true }
     });
   });
 }
 
 
 loadTemplates();
+setupNavigationEvents();
 
