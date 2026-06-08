@@ -1,3 +1,5 @@
+import { GENERATED_MEMES } from "./service";
+
 export function returnMemeEditor(){
     return`
         <div class="editor-toolbar">
@@ -26,8 +28,13 @@ export function returnMemeEditor(){
 
 
 export function renderGenerated(){
-  console.log("hallo")
 const templateSelect = document.getElementById('templateSelect');
 templateSelect.innerHTML=''
+GENERATED_MEMES.forEach((meme)=>{
+  const img = document.createElement('img')
+  img.src = meme.file
+  templateSelect.append(img)
+})
+
 
 }

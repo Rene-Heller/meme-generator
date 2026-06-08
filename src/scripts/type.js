@@ -1,10 +1,10 @@
 export class CustomMeme {
-  title;
+  
   file;
   author;
 
-  constructor(title, file, author) {
-    this.title = title;
+  constructor( file, author) {
+    
     this.file = file;
     this.author = author;
   }

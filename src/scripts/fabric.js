@@ -1,4 +1,6 @@
 import { Canvas, FabricImage, IText } from "fabric";
+import {CustomMeme} from "./type"
+import { GENERATED_MEMES } from "./service";
 
 export async function createImage(i,imgArray) {
   const img = await FabricImage.fromURL(imgArray[i].localUrl);
@@ -70,11 +72,10 @@ export function exportMeme(fabricCanvas,callback) {
     quality: 1
   });
 
-  const img = document.createElement("img");
+  const newMeme = new CustomMeme(png, import.meta.env.VITE_TEAM_NAME)
+  GENERATED_MEMES.push(newMeme)
+  console.log(GENERATED_MEMES)
 
-  img.src = png;
-
-  document.body.appendChild(img);
   if(callback){
     callback()
   }
