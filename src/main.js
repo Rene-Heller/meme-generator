@@ -1,23 +1,13 @@
 import './style.css';
-// import javascriptLogo from './assets/javascript.svg';
-// import viteLogo from './assets/vite.svg';
-// import heroImg from './assets/hero.png';
-import { supabase } from './supabase.js';
-import { returnMemeEditor } from './template.js';
+import { supabase } from './scripts/supabase.js';
+import { returnMemeEditor } from './scripts/template.js';
 import { Canvas, FabricImage } from "fabric";
-import { createImage, createCanvas, addText, exportMeme, bindColorInput } from './fabric.js'
+import { createImage, createCanvas, addText, exportMeme, bindColorInput } from './scripts/fabric.js'
 
 let generatedUrl;
 let fabricCanvas;
 
-const imageArray = [
-  // "src/assets/BadLuckBrian.png",
-  // "src/assets/UnsettledTom.png",
-  // "src/assets/spongebobrainbow.png",
-  // "src/assets/SpongebobBurningPaper.png",
-  // "src/assets/Whowantstobeamillionaire.png",
-  // "src/assets/GooseChase.png"
-];
+const imageArray = [];
 
 document.querySelector('#app').innerHTML = `
 <div id="card">
