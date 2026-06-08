@@ -241,4 +241,7 @@ footer > div > p {
     width: 150px;
     height: 150px;
   }
+  #meme-edit-dialog {
+    transform: scale(0.7);
+  }
 }/*# sourceMappingURL=style.css.map */
