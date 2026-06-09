@@ -1,3 +1,7 @@
+/**
+ * @fileoverview IndexedDB operations for storing and retrieving meme data.
+ */
+
 const request = indexedDB.open("meme-generator", 1);
 
 request.onupgradeneeded = (event) => {
@@ -10,6 +14,12 @@ request.onupgradeneeded = (event) => {
   }
 };
 
+/**
+ * Opens or creates the IndexedDB database for meme storage.
+ * Creates the 'memes' object store if it doesn't exist.
+ * @async
+ * @returns {Promise<IDBDatabase>} The opened database instance
+ */
 function openDB() {
   return new Promise((resolve, reject) => {
     const request = indexedDB.open("meme-generator", 1);
@@ -30,6 +40,16 @@ function openDB() {
   });
 }
 
+/**
+ * Saves a meme object to IndexedDB.
+ * @async
+ * @param {Object} meme - The meme object to save
+ * @param {string} meme.id - Unique identifier (UUID)
+ * @param {boolean} meme.votingSelected - Whether the meme is selected for voting
+ * @param {boolean} meme.uploaded - Whether the meme has been uploaded
+ * @param {Blob} meme.imageBlob - The image blob data
+ * @returns {Promise<void>}
+ */
 async function saveMeme(meme) {
   const db = await openDB();
 

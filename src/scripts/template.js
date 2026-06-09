@@ -1,5 +1,15 @@
+/**
+ * @fileoverview Template rendering functions for meme editor and template gallery.
+ */
+
 import { GENERATED_MEMES, imageArray } from "./service";
 
+/**
+ * Returns the HTML markup for the meme editor toolbar.
+ * Includes text add button, color pickers, export button, and close button.
+ * @export
+ * @returns {string} HTML string for the editor interface
+ */
 export function returnMemeEditor() {
   return `
         <div class="editor-toolbar">
@@ -26,7 +36,11 @@ export function returnMemeEditor() {
       `
 };
 
-
+/**
+ * Renders the gallery of generated memes to the template select container.
+ * Displays all memes from GENERATED_MEMES array as images.
+ * @export
+ */
 export function renderGenerated() {
   const templateSelect = document.getElementById('templateSelect');
   templateSelect.innerHTML = ''
@@ -37,6 +51,12 @@ export function renderGenerated() {
   })  
 };
 
+/**
+ * Renders the meme template gallery to the template select container.
+ * Creates clickable buttons for each template with preview images.
+ * @export
+ * @param {Array<Object>} fileList - Array of template file objects from imageArray
+ */
 export function renderTemplates(fileList) {
   const templateSelect = document.getElementById('templateSelect');
   templateSelect.innerHTML = '';

@@ -1,3 +1,7 @@
+/**
+ * @fileoverview Supabase integration for loading meme templates from cloud storage.
+ */
+
 import { createClient } from '@supabase/supabase-js';
 import { imageArray } from './service';
 import { renderTemplates } from './template';
@@ -5,8 +9,20 @@ import { setupOpenMemeEvents } from './eventListener';
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY
+
+/**
+ * Supabase client instance for cloud storage operations.
+ * @type {SupabaseClient}
+ */
 export const supabase = createClient(supabaseUrl, supabaseKey);
 
+/**
+ * Loads meme templates from Supabase storage.
+ * Fetches from cache if available, otherwise downloads from cloud.
+ * Renders templates and sets up event listeners.
+ * @async
+ * @export
+ */
 export async function loadTemplates() {
   let images;
   if (imageArray.length === 0) {
@@ -28,7 +44,13 @@ export async function loadTemplates() {
 
 }
 
-
+/**
+ * Retrieves image files from Supabase storage and creates local object URLs.
+ * Fetches public URLs and downloads blobs for offline access.
+ * @async
+ * @param {Array<Object>} files - Array of file objects from Supabase storage
+ * @returns {Promise<Array<Object>>} Array of image objects with metadata and local URLs
+ */
 async function getImageFiles(files) {
   if (imageArray.length > 0) return imageArray
 
