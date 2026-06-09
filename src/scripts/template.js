@@ -1,7 +1,7 @@
-import { GENERATED_MEMES } from "./service";
+import { GENERATED_MEMES, imageArray } from "./service";
 
-export function returnMemeEditor(){
-    return`
+export function returnMemeEditor() {
+  return `
         <div class="editor-toolbar">
     
           <button id="addTextBtn">
@@ -24,17 +24,29 @@ export function returnMemeEditor(){
     
         <canvas id="meme-editor" tabindex="1"></canvas>
       `
-}
+};
 
 
-export function renderGenerated(){
-const templateSelect = document.getElementById('templateSelect');
-templateSelect.innerHTML=''
-GENERATED_MEMES.forEach((meme)=>{
-  const img = document.createElement('img')
-  img.src = meme.file
-  templateSelect.append(img)
-})
+export function renderGenerated() {
+  const templateSelect = document.getElementById('templateSelect');
+  templateSelect.innerHTML = ''
+  GENERATED_MEMES.forEach((meme) => {
+    const img = document.createElement('img')
+    img.src = meme.file
+    templateSelect.append(img)
+  })  
+};
 
+export function renderTemplates(fileList) {
+  const templateSelect = document.getElementById('templateSelect');
+  templateSelect.innerHTML = '';
 
+  fileList.forEach((file) => {
+    templateSelect.innerHTML += `
+  <button id="meme-${imageArray.indexOf(file)}" class="create-meme-btn">
+    <img class="template-meme" src="${imageArray[imageArray.indexOf(file)].publicUrl}" alt="">    
+  </button>
+     
+  `
+  });
 }

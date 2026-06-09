@@ -1,6 +1,31 @@
 import { Canvas, FabricImage, IText } from "fabric";
 import {CustomMeme} from "./type"
-import { GENERATED_MEMES } from "./service";
+import { fabricCanvas, GENERATED_MEMES, imageArray, setFabricCanvas } from "./service";
+import { returnMemeEditor } from "./template";
+import { setupDialogEvents, setupEditorEvents } from "./eventListener";
+
+
+export async function openEdit(i) {
+
+  const dialogContainer = document.getElementById('dialog-container')
+  const dialog = document.getElementById("meme-edit-dialog");
+  dialog.innerHTML = returnMemeEditor();
+  setupDialogEvents();
+  dialogContainer.classList.remove("d-none");
+
+
+  const { img, imgWidth, imgHeight } = await createImage(i, imageArray);
+  const canvasElement = document.getElementById("meme-editor");
+  canvasElement.width = imgWidth;
+  canvasElement.height = imgHeight;
+
+  const canvas = createCanvas(img, imgWidth, imgHeight);
+  setFabricCanvas(canvas)
+  fabricCanvas.renderAll()
+
+  setupEditorEvents();
+};
+
 
 export async function createImage(i,imgArray) {
   const img = await FabricImage.fromURL(imgArray[i].localUrl);
@@ -57,7 +82,6 @@ export function addText(fabricCanvas) {
   fabricCanvas.setActiveObject(text);
   fabricCanvas.renderAll();
   
-  // Set focus to canvas for keyboard input
   const canvasElement = document.getElementById("meme-editor");
   if (canvasElement) {
     canvasElement.focus();
