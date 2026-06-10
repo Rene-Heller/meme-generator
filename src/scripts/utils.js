@@ -7,3 +7,16 @@ export function getFileSrc(file, loadedFromIndexDB) {
     }
     return src
 }
+
+
+export function createLocalUrl(templates,ArrayToFill) {
+    const images = templates;
+    if (Array.isArray(images)) {
+
+        images.forEach(element => {
+            element.localUrl = URL.createObjectURL(element.blob)
+            ArrayToFill.push(element)
+        })
+    }
+    return images
+}

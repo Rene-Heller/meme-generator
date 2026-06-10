@@ -2,6 +2,8 @@
  * @fileoverview Navigation functionality for switching between application views.
  */
 
+import { returnGeneratedMemeDialog } from "./template";
+
 /**
  * Navigates to a new view by updating active state and rendering content.
  * Removes active class from all links and applies it to the target link.
@@ -20,3 +22,10 @@ export function navigate(elementId,styleClass,renderFunciton){
     link.classList.add('active');
     return renderFunciton();
 }
+
+function changeMeme(index){
+const dialog = document.getElementById('generated-dialog');
+  dialog.innerHTML = returnGeneratedMemeDialog(index)
+}
+
+window.changeMeme = changeMeme

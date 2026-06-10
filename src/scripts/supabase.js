@@ -7,6 +7,7 @@ import { imageArray } from './service';
 import { renderTemplates } from './template';
 import { setupOpenEditMemeEvents } from './eventListener';
 import { getAll, saveToIndexDb, STORES } from './indexDb';
+import { createLocalUrl } from './utils';
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY
@@ -34,7 +35,7 @@ export async function loadTemplates() {
 
         if (cachedTemplates.length > 0) {
             loadFromIndexDB = true
-            images = createLocalUrl(cachedTemplates)
+            images = createLocalUrl(cachedTemplates, imageArray)
         } else {
             const { data: files, error } = await supabase.storage
                 .from('meme-templates')
@@ -90,17 +91,4 @@ async function getImageFiles(files) {
     }
 
     return imageArray
-}
-
-
-function createLocalUrl(templates) {
-    const images = templates;
-    if (Array.isArray(images)) {
-
-        images.forEach(element => {
-            element.localUrl = URL.createObjectURL(element.blob)
-            imageArray.push(element)
-        })
-    }
-    return images
 }

@@ -2,7 +2,6 @@
 
 #app {
     margin-bottom: 16px;
-    background-color: #09212a;
     margin-top: 8px;
     padding: 12px 0 24px;
     min-height: calc(100vh - 324px);
@@ -39,7 +38,7 @@ header>div {
     left: 0;
 }
 
-#heart-counter{
+#heart-counter {
     position: absolute;
     right: 0;
     display: flex;
@@ -49,7 +48,7 @@ header>div {
     font-size: 24px;
     font-weight: bold;
 
-    img{
+    img {
         height: 32px;
     }
 }
@@ -70,6 +69,21 @@ nav {
     bottom: 0;
     right: 0;
     margin-right: 16px;
+}
+
+#generated-dialog {
+    height: fit-content;
+}
+
+
+#generated-view {
+    padding: 16px;
+    background-color: #0d2f3e;
+    min-height: 90vh;
+    max-height: 900px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 ul {
@@ -183,22 +197,16 @@ footer {
     justify-content: space-between;
 }
 
-.cursor-forbidden{
-    :hover{
+.cursor-forbidden {
+    :hover {
         cursor: not-allowed;
     }
 }
 
 
-#generated-view {
-    padding: 16px;
-    background-color: #0d2f3e;
-}
-
 .generated-dialog {
     padding: 1rem;
     background-color: #0d2f3e;
-    
 
     &__navigation {
         position: relative;
@@ -265,16 +273,16 @@ footer {
     inset: 0;
     margin: auto;
     background-color: transparent;
-    border:none;
+    border: none;
     display: flex;
     justify-content: center;
     align-items: center;
 
-    &:hover{
+    &:hover {
         cursor: pointer;
     }
 
-    img{
+    img {
         height: 100%;
     }
 }
@@ -290,6 +298,10 @@ footer {
     #meme-edit-dialog,
     #generated-dialog {
         transform: scale(0.7);
+    }
+    #generated-view{
+        height: fit-content;
+        min-height: 100vh;
     }
 }
 
