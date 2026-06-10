@@ -2,13 +2,15 @@
  * @fileoverview Global state management for memes, canvas, and template images.
  */
 
+import { uploadTemplate } from "./supabase";
 import { refreshHeartCounter } from "./template";
 
 /**
  * Array to store generated meme objects.
  * @type {Array<CustomMeme>}
  */
-export const GENERATED_MEMES=[]
+export const GENERATED_MEMES = []
+export const FAVORITE_MEMES=[]
 export let LOADED_GENERATED_FROM_INDEXED = false
 export let LIKES = 0
 
@@ -41,21 +43,22 @@ export function setActiveEditMeme(name) {
   activeEditMeme = name;
 }
 
-export function setGeneratedLoadingState(){
+export function setGeneratedLoadingState() {
   LOADED_GENERATED_FROM_INDEXED = true;
 }
 
-export function setLikes(number){
+export function setLikes(number) {
   LIKES = number
 }
 
-export function handleLikeValue(liked){
-  if(liked && LIKES>=2){
-    return 
-  }else if(liked && LIKES<2){
+export function handleLikeValue(liked) {
+  if (liked && LIKES >= 2) {
+    return
+  } else if (liked && LIKES < 2) {
     LIKES++
-  }else if(!liked){
+  } else if (!liked) {
     LIKES--
   }
   refreshHeartCounter()
 }
+

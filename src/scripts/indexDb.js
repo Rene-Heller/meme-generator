@@ -11,6 +11,7 @@ const DB_VERSION = 2;
 const STORES = {
   MEMES: "memes",
   TEMPLATES: "templates",
+  FAV:"fav"
 };
 
 /**
@@ -38,6 +39,11 @@ export function openDB() {
       if (!db.objectStoreNames.contains(STORES.TEMPLATES)) {
         db.createObjectStore(STORES.TEMPLATES, {
           keyPath: "name",
+        });
+      }
+      if (!db.objectStoreNames.contains(STORES.FAV)) {
+        db.createObjectStore(STORES.FAV, {
+          keyPath: "id",
         });
       }
     };

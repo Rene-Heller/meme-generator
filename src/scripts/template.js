@@ -4,7 +4,8 @@
 
 import { handleDialogEventSetup, setupGeneratedDialogEvents, setupOpenEditMemeEvents } from "./eventListener";
 import { getAll, loadGeneratedMemesFromIndexDb, STORES } from "./indexDb";
-import { GENERATED_MEMES, imageArray, LIKES, LOADED_GENERATED_FROM_INDEXED, setGeneratedLoadingState } from "./service";
+import { FAVORITE_MEMES, GENERATED_MEMES, imageArray, LIKES, LOADED_GENERATED_FROM_INDEXED, setGeneratedLoadingState } from "./service";
+import { loadFavs, loadTemplates } from "./supabase";
 import { getFileSrc } from "./utils";
 
 /**
@@ -44,27 +45,29 @@ export function returnMemeEditor() {
  * Displays all memes from GENERATED_MEMES array as images.
  * @export
  */
-export async function renderGenerated() {
+export async function renderGenerated(List) {
+  if (List === FAVORITE_MEMES) return loadFavs()
   const templateSelect = document.getElementById('templateSelect');
   templateSelect.innerHTML = '';
-  GENERATED_MEMES.forEach((meme, index) => {
-    const imgSrc = URL.createObjectURL(meme.blob)
-    templateSelect.innerHTML += `
+  if (Array.isArray(List)) {
+    List.forEach((meme, index) => {
+      const imgSrc = URL.createObjectURL(meme.blob)
+      templateSelect.innerHTML += `
     <button id="meme-${index}" class="create-meme-btn">
       <img class="template-meme" src="${imgSrc}" alt="">
     </button>
     `
-  });
+    });
+  }
 
-  setupGeneratedDialogEvents()
+  setupGeneratedDialogEvents(List)
 };
 
-
-export function openGeneratedDialog(index) {
+export function openGeneratedDialog(List, index, isFav) {
   const container = document.getElementById('dialog-container');
   container.classList.remove('d-none')
   const dialog = document.getElementById('generated-dialog');
-  dialog.innerHTML = returnGeneratedMemeDialog(index)
+  dialog.innerHTML = isFav ? returnFavMemeDialog(List, index) : returnGeneratedMemeDialog(List, index)
 }
 
 
@@ -95,6 +98,23 @@ export function renderTemplates(fileList, loadedFromIndexDB = false) {
 }
 
 
+export function renderFavTemplates(fileList, loadedFromIndexDB = false) {
+  const templateSelect = document.getElementById('templateSelect');
+  templateSelect.innerHTML = '';
+
+  fileList.forEach((file) => {
+    const srcUrl = getFileSrc(file, loadedFromIndexDB)
+    templateSelect.innerHTML += `
+  <button id="meme-${imageArray.indexOf(file)}" class="create-meme-btn">
+    <img class="template-meme" src="${srcUrl}" alt="">    
+  </button>  
+  `
+  });
+
+  setupGeneratedDialogEvents(fileList, true)
+}
+
+
 export function refreshHeartCounter() {
   const counter = document.getElementById('heart-count')
   counter.innerText = LIKES
@@ -105,21 +125,43 @@ export function refreshHeartCounter() {
   }
 }
 
-export function returnGeneratedMemeDialog(index){
+export function returnGeneratedMemeDialog(List, index) {
   return `
   <div id="generated-view">
-    <img src="${URL.createObjectURL(GENERATED_MEMES[index].blob)}" alt="">
+    <img src="${URL.createObjectURL(List[index].blob)}" alt="">
     <div
-        class="generated-dialog__navigation ${index === 0 ? 'justify-end' : index === GENERATED_MEMES.length - 1 ? 'justify-start' : 'justify-between'}">
+        class="generated-dialog__navigation ${index === 0 ? 'justify-end' : index === List.length - 1 ? 'justify-start' : 'justify-between'}">
         <button onclick="changeMeme(${index - 1})" id="left-arrow"
             class="${index === 0 ? `d-none` : ''} generated-dialog__nav-btn generated-dialog__nav-btn--prev">
             <div></div>
         </button>
-        <button id="like-${index}" onclick="handleLike(${index})" class="like-btn ${LIKES === 2 && !GENERATED_MEMES[index].liked ? 'cursor-forbidden' : ''}">
-            <img id='like-icon' src="${GENERATED_MEMES[index].liked ? 'src/assets/img/red-heart.png' : 'src/assets/img/empty-heart.png'}" alt="">
+        <button id="like-${index}" onclick="handleLike(${index})" class="like-btn ${LIKES === 2 && !List[index].liked ? 'cursor-forbidden' : ''} ${List === FAVORITE_MEMES ? 'd-none' : ''}">
+            <img id='like-icon' src="${List[index].liked ? 'src/assets/img/red-heart.png' : 'src/assets/img/empty-heart.png'}" alt="">
         </button>
         <button onclick="changeMeme(${index + 1})" id="right-arrow"
-            class="${index === GENERATED_MEMES.length - 1 ? `d-none` : ''} generated-dialog__nav-btn generated-dialog__nav-btn--next">
+            class="${index === List.length - 1 ? `d-none` : ''} generated-dialog__nav-btn generated-dialog__nav-btn--next">
+            <div></div>
+        </button>
+    </div>
+</div>
+  `
+};
+
+
+export function returnFavMemeDialog(List, index) {
+  const team = List[index].name.split("+")[0]
+  return `
+  <div id="generated-view">
+    <div class="team-name">${team}</div>
+    <img src="${URL.createObjectURL(List[index].blob)}" alt="">
+    <div
+        class="generated-dialog__navigation ${index === 0 ? 'justify-end' : index === List.length - 1 ? 'justify-start' : 'justify-between'}">
+        <button onclick="changeMeme(${index - 1},true)" id="left-arrow"
+            class="${index === 0 ? `d-none` : ''} generated-dialog__nav-btn generated-dialog__nav-btn--prev">
+            <div></div>
+        </button>
+        <button onclick="changeMeme(${index + 1},true)" id="right-arrow"
+            class="${index === List.length - 1 ? `d-none` : ''} generated-dialog__nav-btn generated-dialog__nav-btn--next">
             <div></div>
         </button>
     </div>

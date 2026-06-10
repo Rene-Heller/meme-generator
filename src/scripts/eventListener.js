@@ -3,9 +3,9 @@
  */
 
 import { addText, bindColorInput, exportMeme, openEdit } from "./fabric";
-import { patchMeme, remove, saveToIndexDb, STORES } from "./indexDb";
+import { patchMeme, remove, STORES } from "./indexDb";
 import { navigate } from "./navigation";
-import { fabricCanvas, GENERATED_MEMES, imageArray, LIKES, handleLikeValue } from "./service";
+import { fabricCanvas, GENERATED_MEMES, imageArray, LIKES, handleLikeValue, FAVORITE_MEMES } from "./service";
 import { openGeneratedDialog, renderGenerated, renderTemplates } from "./template";
 
 /**
@@ -35,13 +35,13 @@ export const handleDialogEventSetup = (event) => {
   }
 }
 
-export function setupGeneratedDialogEvents() {
+export function setupGeneratedDialogEvents(List,isFav=false) {
   const buttons = document.querySelectorAll(".create-meme-btn");
   const container = document.getElementById('dialog-container');
 
   buttons.forEach((button, index) => {
     button.children[0].addEventListener("click", () => {
-      openGeneratedDialog(index)
+      openGeneratedDialog(List, index, isFav)
     });
   });
   container.addEventListener('click', handleDialogEventSetup)
@@ -105,8 +105,11 @@ export function setupNavigationEvents() {
         document.getElementById('dialog-container').removeEventListener('click', handleDialogEventSetup)
         navigate(id, 'active', () => renderTemplates(imageArray, setupOpenEditMemeEvents))
       }
-      else {
-        navigate(id, 'active', () => renderGenerated())
+      else if (id == "nav-generated") {
+        navigate(id, 'active', () => renderGenerated(GENERATED_MEMES))
+      }
+      else if (id == "nav-favorites") {
+        navigate(id, 'active', () => renderGenerated(FAVORITE_MEMES))
       }
     })
   })
@@ -115,13 +118,13 @@ export function setupNavigationEvents() {
     const img = document.getElementById('like-icon')
     if (GENERATED_MEMES[index].liked) {
       GENERATED_MEMES[index].liked = false;
-      patchMeme(img,GENERATED_MEMES[index].liked,index)
-      
+      patchMeme(img, GENERATED_MEMES[index].liked, index)
+
     }
     else if (!GENERATED_MEMES[index].liked) {
       if (LIKES === 2) return
       GENERATED_MEMES[index].liked = true;
-      patchMeme(img,GENERATED_MEMES[index].liked,index)
+      patchMeme(img, GENERATED_MEMES[index].liked, index)
     }
   }
 

@@ -6,13 +6,15 @@
 import './style.css';
 import { loadTemplates } from './scripts/supabase.js';
 import { setupNavigationEvents } from './scripts/eventListener.js';
-import { LOADED_GENERATED_FROM_INDEXED, setGeneratedLoadingState } from './scripts/service.js';
+import { FAVORITE_MEMES, LOADED_GENERATED_FROM_INDEXED, setGeneratedLoadingState } from './scripts/service.js';
 import { loadGeneratedMemesFromIndexDb } from './scripts/indexDb.js';
 
 document.querySelector('#app').innerHTML = `
 <div id="card">
 </div>
 <div id="templateSelect"></div>
+<div id="upload-container">
+
 
 `;
 
@@ -36,6 +38,7 @@ async function init(){
       await loadGeneratedMemesFromIndexDb()
       setGeneratedLoadingState();
     }
+  
 };
 
 init()

@@ -31,13 +31,3 @@ export class CustomMeme {
     this.author = author;
   }
 }
-
-/**
- * Represents a meme template.
- * @class MemeTemplate
- * @property {string} name - Template name
- */
-export class MemeTemplate{
-  name;
-
-}

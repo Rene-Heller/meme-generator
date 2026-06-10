@@ -3,8 +3,8 @@
  */
 
 import { createClient } from '@supabase/supabase-js';
-import { imageArray } from './service';
-import { renderTemplates } from './template';
+import { FAVORITE_MEMES, imageArray } from './service';
+import { renderFavTemplates, renderTemplates } from './template';
 import { setupOpenEditMemeEvents } from './eventListener';
 import { getAll, saveToIndexDb, STORES } from './indexDb';
 import { createLocalUrl } from './utils';
@@ -32,18 +32,15 @@ export async function loadTemplates() {
     if (imageArray.length === 0) {
         const cachedTemplates = await getAll(STORES.TEMPLATES);
         const generatedTemplates = await getAll(STORES.MEMES)
-
         if (cachedTemplates.length > 0) {
             loadFromIndexDB = true
             images = createLocalUrl(cachedTemplates, imageArray)
         } else {
             const { data: files, error } = await supabase.storage
-                .from('meme-templates')
+                .from("meme-templates")
                 .list();
-
-            images = await getImageFiles(files);
+            images = await getImageFiles(imageArray, files, "meme-templates");
             if (error) {
-                console.error(error);
                 return;
             }
         }
@@ -62,33 +59,77 @@ export async function loadTemplates() {
  * @param {Array<Object>} files - Array of file objects from Supabase storage
  * @returns {Promise<Array<Object>>} Array of image objects with metadata and local URLs
  */
-async function getImageFiles(files) {
-    if (imageArray.length > 0) return imageArray
-
+async function getImageFiles(list, files, key) {
+    if (list.length > 0) return list
+    const store = key === 'meme-templates' ? STORES.TEMPLATES : STORES.FAV
     files.map((file) => {
-        const {
-            data: { publicUrl },
-        } = supabase.storage.from('meme-templates').getPublicUrl(file.name);
+        const { data: { publicUrl } } = supabase.storage.from(key).getPublicUrl(file.name);
+        if (!file.name.includes('.emptyFolderPlaceholder')) {
 
-        imageArray.push(
-            {
-                ...file,
-                publicUrl,
-            }
-        )
+            list.push(
+                {
+                    ...file,
+                    publicUrl,
+                }
+            )
+        }
     });
-
-    for (const element of imageArray) {
+    for (const element of list) {
         const response = await fetch(element.publicUrl);
         const blob = await response.blob();
-
-        await saveToIndexDb(STORES.TEMPLATES, {
+        element.localUrl = URL.createObjectURL(blob);
+        await saveToIndexDb(store, {
             name: element.name,
             publicUrl: element.publicUrl,
+            id: element.id,
             blob,
+
         });
-        element.localUrl = URL.createObjectURL(blob);
+    }
+    return list
+};
+
+
+export async function uploadTemplate(file) {
+    const extension = file.name.split('.').pop();
+    const fileName = `${file.author}+${file.id}.${extension}`;
+
+    const { data, error } = await supabase.storage
+        .from('custom_memes')
+        .upload(fileName, file.blob, {
+            cacheControl: '3600',
+            upsert: false,
+            contentType: file.blob.type
+        });
+
+    if (error) {
+        return;
     }
 
-    return imageArray
+}
+
+
+export async function loadFavs() {
+    let images;
+    let loadFromIndexDB = false;
+
+    if (FAVORITE_MEMES.length === 0) {
+        const cachedTemplates = await getAll(STORES.FAV);
+        if (cachedTemplates.length > 0) {
+            loadFromIndexDB = true
+            images = createLocalUrl(cachedTemplates, FAVORITE_MEMES)
+        } else {
+            const { data: files, error } = await supabase.storage
+                .from("custom_memes")
+                .list();
+            images = await getImageFiles(FAVORITE_MEMES, files, "custom_memes");
+            if (error) {
+                return;
+            }
+        }
+    } else {
+        images = FAVORITE_MEMES
+    }
+
+    renderFavTemplates(images, loadFromIndexDB);
 }

@@ -2,7 +2,8 @@
  * @fileoverview Navigation functionality for switching between application views.
  */
 
-import { returnGeneratedMemeDialog } from "./template";
+import { FAVORITE_MEMES, GENERATED_MEMES } from "./service";
+import { returnFavMemeDialog, returnGeneratedMemeDialog } from "./template";
 
 /**
  * Navigates to a new view by updating active state and rendering content.
@@ -13,19 +14,21 @@ import { returnGeneratedMemeDialog } from "./template";
  * @param {Function} renderFunciton - Callback function to render the new view
  * @returns {*} The result of the render function
  */
-export function navigate(elementId,styleClass,renderFunciton){
+export function navigate(elementId, styleClass, renderFunciton) {
     const link = document.getElementById(elementId);
     const allLinks = document.querySelectorAll('.active');
-    allLinks.forEach(e=>{
+    allLinks.forEach(e => {
         e.classList.remove('active')
     })
     link.classList.add('active');
     return renderFunciton();
 }
 
-function changeMeme(index){
-const dialog = document.getElementById('generated-dialog');
-  dialog.innerHTML = returnGeneratedMemeDialog(index)
+function changeMeme(index, isFav = false) {
+
+    const dialog = document.getElementById('generated-dialog');
+    if (isFav) dialog.innerHTML = returnFavMemeDialog(FAVORITE_MEMES, index)
+    else dialog.innerHTML = returnGeneratedMemeDialog(GENERATED_MEMES, index)
 }
 
 window.changeMeme = changeMeme

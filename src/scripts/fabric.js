@@ -18,7 +18,6 @@ import { saveToIndexDb, STORES } from "./indexDb";
  */
 export async function openEdit(i) {
   setActiveEditMeme(imageArray[i].name)
-  console.log("active name", activeEditMeme)
   const dialogContainer = document.getElementById('dialog-container')
   const dialog = document.getElementById("meme-edit-dialog");
   dialog.innerHTML = returnMemeEditor();
@@ -134,10 +133,8 @@ export async function exportMeme(fabricCanvas,callback) {
   });
   const blob = await (await fetch(pngDataUrl)).blob();
   const teamName = import.meta.env.VITE_TEAM_NAME
-  console.log(name)
   const newMeme = new CustomMeme(blob,activeEditMeme,teamName )
   GENERATED_MEMES.push(newMeme)
-  console.log(GENERATED_MEMES)
   saveToIndexDb(STORES.MEMES, newMeme)
   
   if(callback){
