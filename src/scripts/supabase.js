@@ -6,6 +6,7 @@ import { createClient } from '@supabase/supabase-js';
 import { imageArray } from './service';
 import { renderTemplates } from './template';
 import { setupOpenMemeEvents } from './eventListener';
+import { getAll, saveToIndexDb, STORES } from './indexDb';
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
 const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY
@@ -24,23 +25,31 @@ export const supabase = createClient(supabaseUrl, supabaseKey);
  * @export
  */
 export async function loadTemplates() {
-  let images;
-  if (imageArray.length === 0) {
-    const { data: files, error } = await supabase.storage
-      .from('meme-templates')
-      .list();
+    let images;
+    let loadFromIndexDB = false;
 
-    images = await getImageFiles(files);
-    if (error) {
-      console.error(error);
-      return;
+    if (imageArray.length === 0) {
+        const cachedTemplates = await getAll(STORES.TEMPLATES);
+
+        if (cachedTemplates.length > 0) {
+            loadFromIndexDB = true
+            images = createLocalUrl(cachedTemplates)
+        } else {
+            const { data: files, error } = await supabase.storage
+                .from('meme-templates')
+                .list();
+
+            images = await getImageFiles(files);
+            if (error) {
+                console.error(error);
+                return;
+            }
+        }
+    } else {
+        images = imageArray
     }
-  } else {
-    images = imageArray
-  }
 
-  renderTemplates(images)
-  setupOpenMemeEvents();
+    renderTemplates(images, loadFromIndexDB);
 
 }
 
@@ -52,27 +61,45 @@ export async function loadTemplates() {
  * @returns {Promise<Array<Object>>} Array of image objects with metadata and local URLs
  */
 async function getImageFiles(files) {
-  if (imageArray.length > 0) return imageArray
+    if (imageArray.length > 0) return imageArray
 
-  files.map((file) => {
-    const {
-      data: { publicUrl },
-    } = supabase.storage.from('meme-templates').getPublicUrl(file.name);
+    files.map((file) => {
+        const {
+            data: { publicUrl },
+        } = supabase.storage.from('meme-templates').getPublicUrl(file.name);
 
-    imageArray.push(
-      {
-        ...file,
-        publicUrl,
-      }
-    )
-  });
+        imageArray.push(
+            {
+                ...file,
+                publicUrl,
+            }
+        )
+    });
 
-  for (const element of imageArray) {
-    const response = await fetch(element.publicUrl);
-    const blob = await response.blob();
+    for (const element of imageArray) {
+        const response = await fetch(element.publicUrl);
+        const blob = await response.blob();
 
-    element.localUrl = URL.createObjectURL(blob);
-  }
+        await saveToIndexDb(STORES.TEMPLATES, {
+            name: element.name,
+            publicUrl: element.publicUrl,
+            blob,
+        });
+        element.localUrl = URL.createObjectURL(blob);
+    }
 
-  return imageArray
+    return imageArray
+}
+
+
+function createLocalUrl(templates) {
+    const images = templates;
+    if (Array.isArray(images)) {
+
+        (images).forEach(element => {
+            element.localUrl = URL.createObjectURL(element.blob)
+            imageArray.push(element)
+        })
+    }
+    return images
 }

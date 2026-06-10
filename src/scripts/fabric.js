@@ -7,6 +7,7 @@ import {CustomMeme} from "./type"
 import { fabricCanvas, GENERATED_MEMES, imageArray, setFabricCanvas } from "./service";
 import { returnMemeEditor } from "./template";
 import { setupDialogEvents, setupEditorEvents } from "./eventListener";
+import { saveToIndexDb, STORES } from "./indexDb";
 
 /**
  * Opens the meme editor dialog for the template at the given index.
@@ -133,7 +134,7 @@ export function exportMeme(fabricCanvas,callback) {
 
   const newMeme = new CustomMeme(png, import.meta.env.VITE_TEAM_NAME)
   GENERATED_MEMES.push(newMeme)
-  console.log(GENERATED_MEMES)
+  saveToIndexDb(STORES.MEMES, newMeme)
 
   if(callback){
     callback()

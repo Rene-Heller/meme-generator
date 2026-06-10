@@ -1,39 +1,40 @@
 /**
- * @fileoverview IndexedDB operations for storing and retrieving meme data.
+ * @fileoverview IndexedDB helper for Meme Generator
  */
 
-const request = indexedDB.open("meme-generator", 1);
+const DB_NAME = "meme-generator";
+const DB_VERSION = 2;
 
-request.onupgradeneeded = (event) => {
-  const db = event.target.result;
-
-  if (!db.objectStoreNames.contains("memes")) {
-    db.createObjectStore("memes", {
-      keyPath: "id",
-    });
-  }
+const STORES = {
+  MEMES: "memes",
+  TEMPLATES: "templates",
 };
 
 /**
- * Opens or creates the IndexedDB database for meme storage.
- * Creates the 'memes' object store if it doesn't exist.
- * @async
- * @returns {Promise<IDBDatabase>} The opened database instance
+ * Opens the database and creates stores if necessary.
  */
-function openDB() {
+export function openDB() {
   return new Promise((resolve, reject) => {
-    const request = indexedDB.open("meme-generator", 1);
+    const request = indexedDB.open(DB_NAME, DB_VERSION);
 
     request.onerror = () => reject(request.error);
 
-    request.onsuccess = () => resolve(request.result);
+    request.onsuccess = () => {
+      resolve(request.result);
+    };
 
     request.onupgradeneeded = (event) => {
       const db = event.target.result;
 
-      if (!db.objectStoreNames.contains("memes")) {
-        db.createObjectStore("memes", {
+      if (!db.objectStoreNames.contains(STORES.MEMES)) {
+        db.createObjectStore(STORES.MEMES, {
           keyPath: "id",
+        });
+      }
+
+      if (!db.objectStoreNames.contains(STORES.TEMPLATES)) {
+        db.createObjectStore(STORES.TEMPLATES, {
+          keyPath: "name",
         });
       }
     };
@@ -41,55 +42,83 @@ function openDB() {
 }
 
 /**
- * Saves a meme object to IndexedDB.
- * @async
- * @param {Object} meme - The meme object to save
- * @param {string} meme.id - Unique identifier (UUID)
- * @param {boolean} meme.votingSelected - Whether the meme is selected for voting
- * @param {boolean} meme.uploaded - Whether the meme has been uploaded
- * @param {Blob} meme.imageBlob - The image blob data
- * @returns {Promise<void>}
+ * Saves any object to a store.
  */
-async function saveMeme(meme) {
+export async function saveToIndexDb(storeName, data) {
   const db = await openDB();
 
   return new Promise((resolve, reject) => {
-    const transaction = db.transaction("memes", "readwrite");
+    const transaction = db.transaction(storeName, "readwrite");
 
-    transaction.objectStore("memes").put(meme);
+    transaction.objectStore(storeName).put(data);
+
+    transaction.oncomplete = () => resolve(data);
+    transaction.onerror = () => reject(transaction.error);
+  });
+}
+
+/**
+ * Gets a single object by key.
+ */
+export async function get(storeName, key) {
+  const db = await openDB();
+
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction(storeName, "readonly");
+
+    const request = transaction.objectStore(storeName).get(key);
+
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject(request.error);
+  });
+}
+
+/**
+ * Gets all objects from a store.
+ */
+export async function getAll(storeName) {
+  const db = await openDB();
+
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction(storeName, "readonly");
+
+    const request = transaction.objectStore(storeName).getAll();
+
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject(request.error);
+  });
+}
+
+/**
+ * Deletes an object by key.
+ */
+export async function remove(storeName, key) {
+  const db = await openDB();
+
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction(storeName, "readwrite");
+
+    transaction.objectStore(storeName).delete(key);
 
     transaction.oncomplete = () => resolve();
     transaction.onerror = () => reject(transaction.error);
   });
 }
 
-await saveMeme({
-  id: crypto.randomUUID(),
-  votingSelected: false,
-  uploaded: false,
-  imageBlob: myBlob,
-});
+/**
+ * Clears an entire store.
+ */
+export async function clear(storeName) {
+  const db = await openDB();
 
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction(storeName, "readwrite");
 
+    transaction.objectStore(storeName).clear();
 
-
-
-
-const cachedTemplates = await getTemplates();
-
-if (cachedTemplates.length > 0) {
-  console.log("Templates aus IndexedDB");
-
-  imageArray.length = 0;
-
-  cachedTemplates.forEach((template) => {
-    imageArray.push({
-      name: template.name,
-      publicUrl: template.publicUrl,
-      localUrl: URL.createObjectURL(template.blob),
-    });
+    transaction.oncomplete = () => resolve();
+    transaction.onerror = () => reject(transaction.error);
   });
-
-  renderTemplates();
-  return;
 }
+
+export { STORES };

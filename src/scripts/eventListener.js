@@ -60,7 +60,6 @@ export function setupOpenMemeEvents() {
   const buttons = document.querySelectorAll(".create-meme-btn");
 
   buttons.forEach((button, index) => {
-    console.log(index)
     button.children[0].addEventListener("click", () => {
       openEdit(index);
       { once: true }
