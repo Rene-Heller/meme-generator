@@ -268,7 +268,7 @@ footer > div > p {
     width: 150px;
     height: 150px;
   }
-  #meme-edit-dialog {
+  #meme-edit-dialog, #generated-dialog {
     transform: scale(0.7);
   }
 }

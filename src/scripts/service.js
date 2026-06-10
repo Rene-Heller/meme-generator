@@ -7,6 +7,7 @@
  * @type {Array<CustomMeme>}
  */
 export const GENERATED_MEMES=[]
+export let LOADED_GENERATED_FROM_INDEXED = false
 
 /**
  * Reference to the current Fabric.js canvas instance.
@@ -28,4 +29,8 @@ export const imageArray = [];
  */
 export function setFabricCanvas(canvas) {
   fabricCanvas = canvas;
+}
+
+export function setGeneratedLoadingState(){
+  LOADED_GENERATED_FROM_INDEXED = true;
 }

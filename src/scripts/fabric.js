@@ -6,7 +6,7 @@ import { Canvas, FabricImage, IText } from "fabric";
 import {CustomMeme} from "./type"
 import { fabricCanvas, GENERATED_MEMES, imageArray, setFabricCanvas } from "./service";
 import { returnMemeEditor } from "./template";
-import { setupDialogEvents, setupEditorEvents } from "./eventListener";
+import { setupEditDialogEvents, setupEditorEvents } from "./eventListener";
 import { saveToIndexDb, STORES } from "./indexDb";
 
 /**
@@ -21,7 +21,7 @@ export async function openEdit(i) {
   const dialogContainer = document.getElementById('dialog-container')
   const dialog = document.getElementById("meme-edit-dialog");
   dialog.innerHTML = returnMemeEditor();
-  setupDialogEvents();
+  setupEditDialogEvents();
   dialogContainer.classList.remove("d-none");
 
 
@@ -125,21 +125,24 @@ export function addText(fabricCanvas) {
  * @param {Canvas} fabricCanvas - The Fabric.js canvas to export
  * @param {Function} [callback] - Optional callback function to execute after export
  */
-export function exportMeme(fabricCanvas,callback) {
+export async function exportMeme(fabricCanvas,callback) {
 
-  const png = fabricCanvas.toDataURL({
+  const pngDataUrl  = fabricCanvas.toDataURL({
     format: "png",
     quality: 1
   });
+  const blob = await (await fetch(pngDataUrl)).blob();
 
-  const newMeme = new CustomMeme(png, import.meta.env.VITE_TEAM_NAME)
+  const newMeme = new CustomMeme(blob, import.meta.env.VITE_TEAM_NAME)
   GENERATED_MEMES.push(newMeme)
+  console.log(GENERATED_MEMES)
   saveToIndexDb(STORES.MEMES, newMeme)
-
+  
   if(callback){
     callback()
   }
-
+  document.getElementById('meme-edit-dialog').innerHTML=''
+  
 };
 
 /**

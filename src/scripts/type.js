@@ -13,7 +13,7 @@
 export class CustomMeme {
   id = crypto.randomUUID();
   votingSelected = false;
-  file;
+  blob;
   author;
 
   /**
@@ -24,7 +24,7 @@ export class CustomMeme {
    */
   constructor( file, author) {
     
-    this.file = file;
+    this.blob = file;
     this.author = author;
   }
 }

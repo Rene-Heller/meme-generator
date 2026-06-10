@@ -2,8 +2,9 @@
  * @fileoverview Template rendering functions for meme editor and template gallery.
  */
 
-import { setupOpenMemeEvents } from "./eventListener";
-import { GENERATED_MEMES, imageArray } from "./service";
+import { setupGeneratedDialogEvents, setupOpenEditMemeEvents } from "./eventListener";
+import { getAll, STORES } from "./indexDb";
+import { GENERATED_MEMES, imageArray, LOADED_GENERATED_FROM_INDEXED, setGeneratedLoadingState } from "./service";
 
 /**
  * Returns the HTML markup for the meme editor toolbar.
@@ -42,15 +43,58 @@ export function returnMemeEditor() {
  * Displays all memes from GENERATED_MEMES array as images.
  * @export
  */
-export function renderGenerated() {
+export async function renderGenerated() {
   const templateSelect = document.getElementById('templateSelect');
-  templateSelect.innerHTML = ''
-  GENERATED_MEMES.forEach((meme) => {
-    const img = document.createElement('img')
-    img.src = meme.file
-    templateSelect.append(img)
-  })
+  templateSelect.innerHTML = '';
+  console.log("hallo", GENERATED_MEMES, GENERATED_MEMES.length)
+  if (!LOADED_GENERATED_FROM_INDEXED) {
+    const memes = await getAll(STORES.MEMES)
+    console.log(memes)
+    if (Array.isArray(memes)) {
+
+      memes.forEach(element => {
+        GENERATED_MEMES.push(element)
+      })
+    };
+    setGeneratedLoadingState();
+  }
+  GENERATED_MEMES.forEach((meme, index) => {
+    const imgSrc = URL.createObjectURL(meme.blob)
+    templateSelect.innerHTML += `
+    <button id="meme-${index}" class="create-meme-btn">
+      <img class="template-meme" src="${imgSrc}" alt="">
+    </button>
+    `
+  });
+  const buttons = document.querySelectorAll(".create-meme-btn");
+
+  buttons.forEach((button, index) => {
+    button.children[0].addEventListener("click", () => {
+      openGeneratedDialog(index)
+    });
+    console.log(`added to index ${index}`)
+    // const img = document.createElement('img')
+    // img.src = meme.file
+    // templateSelect.append(img)
+  });
+
+  setupGeneratedDialogEvents()
 };
+
+
+function openGeneratedDialog(index) {
+  const container = document.getElementById('dialog-container');
+  container.classList.remove('d-none')
+  const dialog = document.getElementById('generated-dialog');
+  dialog.innerHTML = `
+    <div>
+    <img src="${URL.createObjectURL(GENERATED_MEMES[index].blob)}" alt="">
+    </div>
+  `
+}
+
+// window.openGeneratedDialog = openGeneratedDialog
+
 
 /**
  * Renders the meme template gallery to the template select container.
@@ -81,6 +125,6 @@ export function renderTemplates(fileList, loadedFromIndexDB = false) {
      
   `
   });
-  setupOpenMemeEvents();
+  setupOpenEditMemeEvents();
 
 }

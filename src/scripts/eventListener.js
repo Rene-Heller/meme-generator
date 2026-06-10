@@ -12,7 +12,7 @@ import { renderGenerated, renderTemplates } from "./template";
  * Closes the dialog and removes event listeners on click.
  * @export
  */
-export function setupDialogEvents() {
+export function setupEditDialogEvents() {
   const btn = document.getElementById("close-dialog-btn");
   const dialogContainer = document.getElementById('dialog-container')
 
@@ -22,6 +22,17 @@ export function setupDialogEvents() {
   },
     { once: true }
   );
+};
+
+export function setupGeneratedDialogEvents() {
+    const container = document.getElementById('dialog-container');
+    const dialog = document.getElementById('generated-dialog');
+    container.addEventListener('click', (ev) => {
+      if (ev.target === container) {
+        dialog.innerHTML = "";
+        container.classList.add('d-none');
+      }
+    })
 };
 
 /**
@@ -56,7 +67,7 @@ export function setupEditorEvents() {
  * Opens the editor when a template image is clicked.
  * @export
  */
-export function setupOpenMemeEvents() {
+export function setupOpenEditMemeEvents() {
   const buttons = document.querySelectorAll(".create-meme-btn");
 
   buttons.forEach((button, index) => {
@@ -66,6 +77,7 @@ export function setupOpenMemeEvents() {
     });
   });
 }
+
 
 /**
  * Sets up event listeners for navigation menu items.
@@ -78,11 +90,11 @@ export function setupNavigationEvents() {
     element.addEventListener('click', () => {
       const id = element.id
       if (id == "nav-edit") {
-        navigate(id, 'active',()=> renderTemplates(imageArray)),
+        navigate(id, 'active',()=> renderTemplates(imageArray,setupOpenEditMemeEvents)),
           { once: true }
       }
       else {
-        navigate(id, 'active', renderGenerated),
+        navigate(id, 'active', ()=> renderGenerated()),
           { once: true }
       }
     })

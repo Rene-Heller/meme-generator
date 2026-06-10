@@ -5,7 +5,7 @@
 import { createClient } from '@supabase/supabase-js';
 import { imageArray } from './service';
 import { renderTemplates } from './template';
-import { setupOpenMemeEvents } from './eventListener';
+import { setupOpenEditMemeEvents } from './eventListener';
 import { getAll, saveToIndexDb, STORES } from './indexDb';
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
@@ -30,10 +30,12 @@ export async function loadTemplates() {
 
     if (imageArray.length === 0) {
         const cachedTemplates = await getAll(STORES.TEMPLATES);
+        const generatedTemplates = await getAll(STORES.MEMES)
 
         if (cachedTemplates.length > 0) {
             loadFromIndexDB = true
             images = createLocalUrl(cachedTemplates)
+            // images = createLocalUrl(generatedTemplates)
         } else {
             const { data: files, error } = await supabase.storage
                 .from('meme-templates')
@@ -96,7 +98,7 @@ function createLocalUrl(templates) {
     const images = templates;
     if (Array.isArray(images)) {
 
-        (images).forEach(element => {
+        images.forEach(element => {
             element.localUrl = URL.createObjectURL(element.blob)
             imageArray.push(element)
         })
