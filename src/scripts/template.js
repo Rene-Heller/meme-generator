@@ -4,7 +4,7 @@
 
 import { handleDialogEventSetup, setupGeneratedDialogEvents, setupOpenEditMemeEvents } from "./eventListener";
 import { getAll, loadGeneratedMemesFromIndexDb, STORES } from "./indexDb";
-import { GENERATED_MEMES, imageArray, LOADED_GENERATED_FROM_INDEXED, setGeneratedLoadingState } from "./service";
+import { GENERATED_MEMES, imageArray, LIKES, LOADED_GENERATED_FROM_INDEXED, setGeneratedLoadingState } from "./service";
 import { getFileSrc } from "./utils";
 
 /**
@@ -47,10 +47,6 @@ export function returnMemeEditor() {
 export async function renderGenerated() {
   const templateSelect = document.getElementById('templateSelect');
   templateSelect.innerHTML = '';
-  if (!LOADED_GENERATED_FROM_INDEXED) {
-    await loadGeneratedMemesFromIndexDb()
-    setGeneratedLoadingState();
-  }
   GENERATED_MEMES.forEach((meme, index) => {
     const imgSrc = URL.createObjectURL(meme.blob)
     templateSelect.innerHTML += `
@@ -68,15 +64,22 @@ export function openGeneratedDialog(index) {
   const container = document.getElementById('dialog-container');
   container.classList.remove('d-none')
   const dialog = document.getElementById('generated-dialog');
-  dialog.innerHTML = `<div id="generated-view">
+  dialog.innerHTML = `
+  <div id="generated-view">
     <img src="${URL.createObjectURL(GENERATED_MEMES[index].blob)}" alt="">
-    <div class="generated-dialog__navigation ${index === 0 ? 'justify-end' : index === GENERATED_MEMES.length - 1 ? 'justify-start' : 'justify-between'}">
-    <button id="left-arrow" class="${index === 0 ? `d-none` : ''} generated-dialog__nav-btn generated-dialog__nav-btn--prev">
-    <img class="arrow-btn" src="src/assets/img/Arrow-Right.svg" alt="">
-    </button>
-    <button id="right-arrow" class="${index === GENERATED_MEMES.length - 1 ? `d-none` : ''} generated-dialog__nav-btn generated-dialog__nav-btn--next">
-        <img class="arrow-btn" src="src/assets/img/Arrow-Right.svg" alt="">
-    </button>
+    <div
+        class="generated-dialog__navigation ${index === 0 ? 'justify-end' : index === GENERATED_MEMES.length - 1 ? 'justify-start' : 'justify-between'}">
+        <button id="left-arrow"
+            class="${index === 0 ? `d-none` : ''} generated-dialog__nav-btn generated-dialog__nav-btn--prev">
+            <div></div>
+        </button>
+        <button id="like-${index}" onclick="handleLike(${index})" class="like-btn ${LIKES===2 && !GENERATED_MEMES[index].liked?'cursor-forbidden':''}">
+            <img id='like-icon' src="${GENERATED_MEMES[index].liked?'src/assets/img/red-heart.png':'src/assets/img/empty-heart.png'}" alt="">
+        </button>
+        <button id="right-arrow"
+            class="${index === GENERATED_MEMES.length - 1 ? `d-none` : ''} generated-dialog__nav-btn generated-dialog__nav-btn--next">
+            <div></div>
+        </button>
     </div>
 </div>
   `
@@ -107,4 +110,15 @@ export function renderTemplates(fileList, loadedFromIndexDB = false) {
   setupOpenEditMemeEvents();
   document.removeEventListener('click', handleDialogEventSetup)
 
+}
+
+
+export function refreshHeartCounter(){
+  const counter = document.getElementById('heart-count')
+  counter.innerText = LIKES
+  if(LIKES===2){
+    counter.style.color = "red"
+  }else{
+    counter.style.color = "white"
+  }
 }

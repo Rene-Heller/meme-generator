@@ -2,12 +2,15 @@
  * @fileoverview Global state management for memes, canvas, and template images.
  */
 
+import { refreshHeartCounter } from "./template";
+
 /**
  * Array to store generated meme objects.
  * @type {Array<CustomMeme>}
  */
 export const GENERATED_MEMES=[]
 export let LOADED_GENERATED_FROM_INDEXED = false
+export let LIKES = 0
 
 /**
  * Reference to the current Fabric.js canvas instance.
@@ -40,4 +43,19 @@ export function setActiveEditMeme(name) {
 
 export function setGeneratedLoadingState(){
   LOADED_GENERATED_FROM_INDEXED = true;
+}
+
+export function setLikes(number){
+  LIKES = number
+}
+
+export function handleLikeValue(liked){
+  if(liked && LIKES>=2){
+    return 
+  }else if(liked && LIKES<2){
+    LIKES++
+  }else if(!liked){
+    LIKES--
+  }
+  refreshHeartCounter()
 }

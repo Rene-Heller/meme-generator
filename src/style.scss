@@ -34,9 +34,24 @@ header>div {
     position: relative;
 }
 
-header>div img {
+#logo {
     position: absolute;
     left: 0;
+}
+
+#heart-counter{
+    position: absolute;
+    right: 0;
+    display: flex;
+    color: white;
+    align-items: center;
+    gap: 8px;
+    font-size: 24px;
+    font-weight: bold;
+
+    img{
+        height: 32px;
+    }
 }
 
 header>div>h1 {
@@ -168,6 +183,11 @@ footer {
     justify-content: space-between;
 }
 
+.cursor-forbidden{
+    :hover{
+        cursor: not-allowed;
+    }
+}
 
 
 #generated-view {
@@ -178,20 +198,25 @@ footer {
 .generated-dialog {
     padding: 1rem;
     background-color: #0d2f3e;
-
-    img {
-        display: block;
-        max-width: 100%;
-        height: auto;
-    }
+    
 
     &__navigation {
+        position: relative;
         display: flex;
         align-items: center;
         padding: 1rem;
     }
 
     &__nav-btn {
+        div {
+            height: 60%;
+            width: 60%;
+            background-image: url("assets/img/Arrow-Right-gray.svg");
+            background-size: cover;
+            background-position: center;
+
+        }
+
         display: flex;
         justify-content: center;
         align-items: center;
@@ -206,12 +231,15 @@ footer {
 
         font-weight: 700;
 
-        transition:
-            background-color 0.2s ease,
-            transform 0.2s ease;
+        transition: background-color 0.2s ease,
+        transform 0.2s ease;
 
         &:hover {
             background-color: #09232d;
+
+            div {
+                background-image: url("assets/img/Arrow-Right.svg");
+            }
 
         }
 
@@ -227,9 +255,27 @@ footer {
             display: none;
         }
 
-        img{
-            height: 50%;
-        }
+    }
+}
+
+.like-btn {
+    position: absolute;
+    height: 60px;
+    width: 60px;
+    inset: 0;
+    margin: auto;
+    background-color: transparent;
+    border:none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    &:hover{
+        cursor: pointer;
+    }
+
+    img{
+        height: 100%;
     }
 }
 

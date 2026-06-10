@@ -144,9 +144,23 @@ header > div {
   position: relative;
 }
 
-header > div img {
+#logo {
   position: absolute;
   left: 0;
+}
+
+#heart-counter {
+  position: absolute;
+  right: 0;
+  display: flex;
+  color: white;
+  align-items: center;
+  gap: 8px;
+  font-size: 24px;
+  font-weight: bold;
+}
+#heart-counter img {
+  height: 32px;
 }
 
 header > div > h1 {
@@ -271,6 +285,10 @@ footer > div > p {
   justify-content: space-between;
 }
 
+.cursor-forbidden :hover {
+  cursor: not-allowed;
+}
+
 #generated-view {
   padding: 16px;
   background-color: #0d2f3e;
@@ -280,15 +298,18 @@ footer > div > p {
   padding: 1rem;
   background-color: #0d2f3e;
 }
-.generated-dialog img {
-  display: block;
-  max-width: 100%;
-  height: auto;
-}
 .generated-dialog__navigation {
+  position: relative;
   display: flex;
   align-items: center;
   padding: 1rem;
+}
+.generated-dialog__nav-btn div {
+  height: 60%;
+  width: 60%;
+  background-image: url("assets/img/Arrow-Right-gray.svg");
+  background-size: cover;
+  background-position: center;
 }
 .generated-dialog__nav-btn {
   display: flex;
@@ -306,6 +327,9 @@ footer > div > p {
 .generated-dialog__nav-btn:hover {
   background-color: #09232d;
 }
+.generated-dialog__nav-btn:hover div {
+  background-image: url("assets/img/Arrow-Right.svg");
+}
 .generated-dialog__nav-btn--prev {
   transform: rotate(-90deg);
 }
@@ -315,8 +339,24 @@ footer > div > p {
 .generated-dialog__nav-btn.hidden {
   display: none;
 }
-.generated-dialog__nav-btn img {
-  height: 50%;
+
+.like-btn {
+  position: absolute;
+  height: 60px;
+  width: 60px;
+  inset: 0;
+  margin: auto;
+  background-color: transparent;
+  border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.like-btn:hover {
+  cursor: pointer;
+}
+.like-btn img {
+  height: 100%;
 }
 
 @media screen and (max-width: 1200px) {

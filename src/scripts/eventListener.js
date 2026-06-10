@@ -3,8 +3,9 @@
  */
 
 import { addText, bindColorInput, exportMeme, openEdit } from "./fabric";
+import { patchMeme, remove, saveToIndexDb, STORES } from "./indexDb";
 import { navigate } from "./navigation";
-import { fabricCanvas, imageArray } from "./service";
+import { fabricCanvas, GENERATED_MEMES, imageArray, LIKES, handleLikeValue } from "./service";
 import { openGeneratedDialog, renderGenerated, renderTemplates } from "./template";
 
 /**
@@ -28,7 +29,6 @@ export function setupEditDialogEvents() {
 export const handleDialogEventSetup = (event) => {
   const container = document.getElementById('dialog-container');
   const dialog = document.getElementById('generated-dialog');
-  console.log("added")
   if (event.target === container) {
     dialog.innerHTML = "";
     container.classList.add('d-none');
@@ -110,4 +110,20 @@ export function setupNavigationEvents() {
       }
     })
   })
+
+  function handleLike(index) {
+    const img = document.getElementById('like-icon')
+    if (GENERATED_MEMES[index].liked) {
+      GENERATED_MEMES[index].liked = false;
+      patchMeme(img,GENERATED_MEMES[index].liked,index)
+      
+    }
+    else if (!GENERATED_MEMES[index].liked) {
+      if (LIKES === 2) return
+      GENERATED_MEMES[index].liked = true;
+      patchMeme(img,GENERATED_MEMES[index].liked,index)
+    }
+  }
+
+  window.handleLike = handleLike
 }

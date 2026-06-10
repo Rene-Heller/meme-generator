@@ -11,8 +11,10 @@
  * @property {string} author - Author/creator name
  */
 export class CustomMeme {
+  
   id = crypto.randomUUID();
   votingSelected = false;
+  liked=false;
   blob;
   name;
   author;

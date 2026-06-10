@@ -2,7 +2,8 @@
  * @fileoverview IndexedDB helper for Meme Generator
  */
 
-import { GENERATED_MEMES } from "./service";
+import { GENERATED_MEMES, handleLikeValue, setLikes } from "./service";
+import { refreshHeartCounter } from "./template";
 
 const DB_NAME = "meme-generator";
 const DB_VERSION = 2;
@@ -131,11 +132,22 @@ export async function loadGeneratedMemesFromIndexDb() {
         meme => meme.name === element.name
       );
 
-       if (!exists) {
+      if (!exists) {
         GENERATED_MEMES.push(element);
       }
     })
   };
+  setLikes(GENERATED_MEMES.filter((element)=>element.liked===true).length)
+  refreshHeartCounter()
+};
+
+export function patchMeme(htmlElement, likeValue, index) {
+  const newSrc = likeValue ? 'red' : 'empty';
+  htmlElement.setAttribute('src', `src/assets/img/${newSrc}-heart.png`);
+  if (!likeValue) htmlElement.parentElement.classList.remove('cursor-forbidden');
+  handleLikeValue(likeValue);
+  remove(STORES.MEMES, GENERATED_MEMES[index].id);
+  saveToIndexDb(STORES.MEMES, GENERATED_MEMES[index]);
 }
 
 export { STORES };

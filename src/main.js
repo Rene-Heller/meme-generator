@@ -6,6 +6,8 @@
 import './style.css';
 import { loadTemplates } from './scripts/supabase.js';
 import { setupNavigationEvents } from './scripts/eventListener.js';
+import { LOADED_GENERATED_FROM_INDEXED, setGeneratedLoadingState } from './scripts/service.js';
+import { loadGeneratedMemesFromIndexDb } from './scripts/indexDb.js';
 
 document.querySelector('#app').innerHTML = `
 <div id="card">
@@ -30,6 +32,10 @@ function closeDialog() {
 async function init(){
   await loadTemplates();
   setupNavigationEvents();
+  if (!LOADED_GENERATED_FROM_INDEXED) {
+      await loadGeneratedMemesFromIndexDb()
+      setGeneratedLoadingState();
+    }
 };
 
 init()
