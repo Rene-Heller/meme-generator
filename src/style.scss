@@ -50,10 +50,10 @@ header>div>h1>span {
     font-size: 48px;
 }
 
-nav{
+nav {
     position: absolute;
     bottom: 0;
-    right:0;
+    right: 0;
     margin-right: 16px;
 }
 
@@ -61,23 +61,23 @@ ul {
     list-style: none;
     color: white;
     display: flex;
-    gap:16px;
+    gap: 16px;
 
-    li{
+    li {
         text-decoration: underline;
 
-        &:hover{
-            color:#FD5B4F;
+        &:hover {
+            color: #FD5B4F;
             cursor: pointer;
         }
 
-        
+
     }
 }
 
-.active{
-            color:#FD5B4F
-        }
+.active {
+    color: #FD5B4F
+}
 
 footer {
     position: relative;
@@ -156,8 +156,90 @@ footer {
     display: flex;
 }
 
-.d-none {
-    display: none;
+.justify-start {
+    justify-content: flex-start;
+}
+
+.justify-end {
+    justify-content: end;
+}
+
+.justify-between {
+    justify-content: space-between;
+}
+
+
+
+#generated-view {
+    padding: 16px;
+    background-color: #0d2f3e;
+}
+
+.generated-dialog {
+    padding: 1rem;
+    background-color: #0d2f3e;
+
+    img {
+        display: block;
+        max-width: 100%;
+        height: auto;
+    }
+
+    &__navigation {
+        display: flex;
+        align-items: center;
+        padding: 1rem;
+    }
+
+    &__nav-btn {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        width: 5rem;
+        height: 5rem;
+
+        border-radius: 50%;
+        background-color: #1f1e23;
+        border: none;
+        cursor: pointer;
+
+        font-weight: 700;
+
+        transition:
+            background-color 0.2s ease,
+            transform 0.2s ease;
+
+        &:hover {
+            background-color: #09232d;
+
+            svg path {
+                fill: #fd5b4f;
+            }
+        }
+
+        svg {
+            width: 3rem;
+            height: 3rem;
+
+            path {
+                fill: #99acb3;
+                transition: fill 0.2s ease;
+            }
+        }
+
+        &--prev {
+            transform: rotate(-90deg);
+        }
+
+        &--next {
+            transform: rotate(90deg);
+        }
+
+        &.hidden {
+            display: none;
+        }
+    }
 }
 
 
@@ -168,18 +250,25 @@ footer {
 
     }
 
-    #meme-edit-dialog, #generated-dialog {
+    #meme-edit-dialog,
+    #generated-dialog {
         transform: scale(0.7);
     }
 }
 
 @media screen and (max-width:820px) {
-    header > div > h1,header > div > h1 > span{
+
+    header>div>h1,
+    header>div>h1>span {
         font-size: 36px;
         text-align: center;
     }
 
-    #logo{
+    #logo {
         display: none;
     }
+}
+
+.d-none {
+    display: none;
 }

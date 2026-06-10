@@ -19,27 +19,32 @@ export function setupEditDialogEvents() {
 
   btn.addEventListener("click", () => {
     dialogContainer.classList.add("d-none");
+    document.getElementById('meme-edit-dialog').innerHTML = ''
   },
     { once: true }
   );
 };
 
+export const handleDialogEventSetup = (event) => {
+  const container = document.getElementById('dialog-container');
+  const dialog = document.getElementById('generated-dialog');
+  console.log("added")
+  if (event.target === container) {
+    dialog.innerHTML = "";
+    container.classList.add('d-none');
+  }
+}
+
 export function setupGeneratedDialogEvents() {
   const buttons = document.querySelectorAll(".create-meme-btn");
+  const container = document.getElementById('dialog-container');
 
   buttons.forEach((button, index) => {
     button.children[0].addEventListener("click", () => {
       openGeneratedDialog(index)
     });
   });
-    const container = document.getElementById('dialog-container');
-    const dialog = document.getElementById('generated-dialog');
-    container.addEventListener('click', (ev) => {
-      if (ev.target === container) {
-        dialog.innerHTML = "";
-        container.classList.add('d-none');
-      }
-    })
+  container.addEventListener('click', handleDialogEventSetup)
 };
 
 /**
@@ -97,12 +102,11 @@ export function setupNavigationEvents() {
     element.addEventListener('click', () => {
       const id = element.id
       if (id == "nav-edit") {
-        navigate(id, 'active',()=> renderTemplates(imageArray,setupOpenEditMemeEvents)),
-          { once: true }
+        document.getElementById('dialog-container').removeEventListener('click', handleDialogEventSetup)
+        navigate(id, 'active', () => renderTemplates(imageArray, setupOpenEditMemeEvents))
       }
       else {
-        navigate(id, 'active', ()=> renderGenerated()),
-          { once: true }
+        navigate(id, 'active', () => renderGenerated())
       }
     })
   })

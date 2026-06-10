@@ -2,7 +2,7 @@
  * @fileoverview Template rendering functions for meme editor and template gallery.
  */
 
-import { setupGeneratedDialogEvents, setupOpenEditMemeEvents } from "./eventListener";
+import { handleDialogEventSetup, setupGeneratedDialogEvents, setupOpenEditMemeEvents } from "./eventListener";
 import { getAll, loadGeneratedMemesFromIndexDb, STORES } from "./indexDb";
 import { GENERATED_MEMES, imageArray, LOADED_GENERATED_FROM_INDEXED, setGeneratedLoadingState } from "./service";
 import { getFileSrc } from "./utils";
@@ -59,7 +59,7 @@ export async function renderGenerated() {
     </button>
     `
   });
-  
+
   setupGeneratedDialogEvents()
 };
 
@@ -68,10 +68,17 @@ export function openGeneratedDialog(index) {
   const container = document.getElementById('dialog-container');
   container.classList.remove('d-none')
   const dialog = document.getElementById('generated-dialog');
-  dialog.innerHTML = `
-    <div>
+  dialog.innerHTML = `<div id="generated-view">
     <img src="${URL.createObjectURL(GENERATED_MEMES[index].blob)}" alt="">
+    <div class="generated-dialog__navigation ${index===0? 'justify-end' : index===GENERATED_MEMES.length-1?'justify-start':'justify-between'}">
+    <button id="left-arrow" class="${index===0?`d-none`:''} generated-dialog__nav-btn generated-dialog__nav-btn--prev">
+    <img src="src/assets/img/Arrow-Right.svg" alt="">
+    </button>
+    <button id="right-arrow" class="${index===GENERATED_MEMES.length-1?`d-none`:''} generated-dialog__nav-btn generated-dialog__nav-btn--next">
+        <img src="src/assets/img/Arrow-Right.svg" alt="">
+    </button>
     </div>
+</div>
   `
 }
 
@@ -85,7 +92,7 @@ export function openGeneratedDialog(index) {
 export function renderTemplates(fileList, loadedFromIndexDB = false) {
   const templateSelect = document.getElementById('templateSelect');
   templateSelect.innerHTML = '';
-  
+
 
 
   fileList.forEach((file) => {
@@ -98,5 +105,6 @@ export function renderTemplates(fileList, loadedFromIndexDB = false) {
   `
   });
   setupOpenEditMemeEvents();
+  document.removeEventListener('click',handleDialogEventSetup)
 
 }
