@@ -2,6 +2,8 @@
  * @fileoverview IndexedDB helper for Meme Generator
  */
 
+import { GENERATED_MEMES } from "./service";
+
 const DB_NAME = "meme-generator";
 const DB_VERSION = 2;
 
@@ -119,6 +121,16 @@ export async function clear(storeName) {
     transaction.oncomplete = () => resolve();
     transaction.onerror = () => reject(transaction.error);
   });
+};
+
+export async function loadGeneratedMemesFromIndexDb(){
+  const memes = await getAll(STORES.MEMES)
+    if (Array.isArray(memes)) {
+
+      memes.forEach(element => {
+        GENERATED_MEMES.push(element)
+      })
+    };
 }
 
 export { STORES };

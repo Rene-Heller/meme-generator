@@ -3,8 +3,9 @@
  */
 
 import { setupGeneratedDialogEvents, setupOpenEditMemeEvents } from "./eventListener";
-import { getAll, STORES } from "./indexDb";
+import { getAll, loadGeneratedMemesFromIndexDb, STORES } from "./indexDb";
 import { GENERATED_MEMES, imageArray, LOADED_GENERATED_FROM_INDEXED, setGeneratedLoadingState } from "./service";
+import { getFileSrc } from "./utils";
 
 /**
  * Returns the HTML markup for the meme editor toolbar.
@@ -46,16 +47,8 @@ export function returnMemeEditor() {
 export async function renderGenerated() {
   const templateSelect = document.getElementById('templateSelect');
   templateSelect.innerHTML = '';
-  console.log("hallo", GENERATED_MEMES, GENERATED_MEMES.length)
   if (!LOADED_GENERATED_FROM_INDEXED) {
-    const memes = await getAll(STORES.MEMES)
-    console.log(memes)
-    if (Array.isArray(memes)) {
-
-      memes.forEach(element => {
-        GENERATED_MEMES.push(element)
-      })
-    };
+    await loadGeneratedMemesFromIndexDb()
     setGeneratedLoadingState();
   }
   GENERATED_MEMES.forEach((meme, index) => {
@@ -66,23 +59,12 @@ export async function renderGenerated() {
     </button>
     `
   });
-  const buttons = document.querySelectorAll(".create-meme-btn");
-
-  buttons.forEach((button, index) => {
-    button.children[0].addEventListener("click", () => {
-      openGeneratedDialog(index)
-    });
-    console.log(`added to index ${index}`)
-    // const img = document.createElement('img')
-    // img.src = meme.file
-    // templateSelect.append(img)
-  });
-
+  
   setupGeneratedDialogEvents()
 };
 
 
-function openGeneratedDialog(index) {
+export function openGeneratedDialog(index) {
   const container = document.getElementById('dialog-container');
   container.classList.remove('d-none')
   const dialog = document.getElementById('generated-dialog');
@@ -92,8 +74,6 @@ function openGeneratedDialog(index) {
     </div>
   `
 }
-
-// window.openGeneratedDialog = openGeneratedDialog
 
 
 /**
@@ -105,15 +85,7 @@ function openGeneratedDialog(index) {
 export function renderTemplates(fileList, loadedFromIndexDB = false) {
   const templateSelect = document.getElementById('templateSelect');
   templateSelect.innerHTML = '';
-  function getFileSrc(file, loadedFromIndexDB) {
-    let src
-    if (loadedFromIndexDB) {
-      src = file.localUrl ? file.localUrl : URL.createObjectURL(file.blob)
-    } else {
-      src = file.localUrl ? file.localUrl : file.publicUrl
-    }
-    return src
-  }
+  
 
 
   fileList.forEach((file) => {

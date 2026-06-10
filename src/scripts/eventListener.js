@@ -5,7 +5,7 @@
 import { addText, bindColorInput, exportMeme, openEdit } from "./fabric";
 import { navigate } from "./navigation";
 import { fabricCanvas, imageArray } from "./service";
-import { renderGenerated, renderTemplates } from "./template";
+import { openGeneratedDialog, renderGenerated, renderTemplates } from "./template";
 
 /**
  * Sets up event listeners for the dialog close button.
@@ -25,6 +25,13 @@ export function setupEditDialogEvents() {
 };
 
 export function setupGeneratedDialogEvents() {
+  const buttons = document.querySelectorAll(".create-meme-btn");
+
+  buttons.forEach((button, index) => {
+    button.children[0].addEventListener("click", () => {
+      openGeneratedDialog(index)
+    });
+  });
     const container = document.getElementById('dialog-container');
     const dialog = document.getElementById('generated-dialog');
     container.addEventListener('click', (ev) => {
