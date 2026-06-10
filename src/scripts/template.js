@@ -70,12 +70,12 @@ export function openGeneratedDialog(index) {
   const dialog = document.getElementById('generated-dialog');
   dialog.innerHTML = `<div id="generated-view">
     <img src="${URL.createObjectURL(GENERATED_MEMES[index].blob)}" alt="">
-    <div class="generated-dialog__navigation ${index===0? 'justify-end' : index===GENERATED_MEMES.length-1?'justify-start':'justify-between'}">
-    <button id="left-arrow" class="${index===0?`d-none`:''} generated-dialog__nav-btn generated-dialog__nav-btn--prev">
-    <img src="src/assets/img/Arrow-Right.svg" alt="">
+    <div class="generated-dialog__navigation ${index === 0 ? 'justify-end' : index === GENERATED_MEMES.length - 1 ? 'justify-start' : 'justify-between'}">
+    <button id="left-arrow" class="${index === 0 ? `d-none` : ''} generated-dialog__nav-btn generated-dialog__nav-btn--prev">
+    <img class="arrow-btn" src="src/assets/img/Arrow-Right.svg" alt="">
     </button>
-    <button id="right-arrow" class="${index===GENERATED_MEMES.length-1?`d-none`:''} generated-dialog__nav-btn generated-dialog__nav-btn--next">
-        <img src="src/assets/img/Arrow-Right.svg" alt="">
+    <button id="right-arrow" class="${index === GENERATED_MEMES.length - 1 ? `d-none` : ''} generated-dialog__nav-btn generated-dialog__nav-btn--next">
+        <img class="arrow-btn" src="src/assets/img/Arrow-Right.svg" alt="">
     </button>
     </div>
 </div>
@@ -105,6 +105,6 @@ export function renderTemplates(fileList, loadedFromIndexDB = false) {
   `
   });
   setupOpenEditMemeEvents();
-  document.removeEventListener('click',handleDialogEventSetup)
+  document.removeEventListener('click', handleDialogEventSetup)
 
 }

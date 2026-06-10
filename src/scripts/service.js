@@ -22,6 +22,8 @@ export let fabricCanvas;
  */
 export const imageArray = [];
 
+export let activeEditMeme
+
 /**
  * Sets the global Fabric canvas reference.
  * @export
@@ -29,6 +31,11 @@ export const imageArray = [];
  */
 export function setFabricCanvas(canvas) {
   fabricCanvas = canvas;
+}
+
+
+export function setActiveEditMeme(name) {
+  activeEditMeme = name;
 }
 
 export function setGeneratedLoadingState(){

@@ -14,6 +14,7 @@ export class CustomMeme {
   id = crypto.randomUUID();
   votingSelected = false;
   blob;
+  name;
   author;
 
   /**
@@ -22,9 +23,9 @@ export class CustomMeme {
    * @param {string} file - Data URL or image file reference
    * @param {string} author - Author/creator name
    */
-  constructor( file, author) {
-    
+  constructor( file,name, author) {
     this.blob = file;
+    this.name = name;
     this.author = author;
   }
 }

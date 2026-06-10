@@ -123,14 +123,19 @@ export async function clear(storeName) {
   });
 };
 
-export async function loadGeneratedMemesFromIndexDb(){
+export async function loadGeneratedMemesFromIndexDb() {
   const memes = await getAll(STORES.MEMES)
-    if (Array.isArray(memes)) {
+  if (Array.isArray(memes)) {
+    memes.forEach(element => {
+      const exists = GENERATED_MEMES.some(
+        meme => meme.name === element.name
+      );
 
-      memes.forEach(element => {
-        GENERATED_MEMES.push(element)
-      })
-    };
+       if (!exists) {
+        GENERATED_MEMES.push(element);
+      }
+    })
+  };
 }
 
 export { STORES };

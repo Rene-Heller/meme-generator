@@ -4,7 +4,7 @@
 
 import { Canvas, FabricImage, IText } from "fabric";
 import {CustomMeme} from "./type"
-import { fabricCanvas, GENERATED_MEMES, imageArray, setFabricCanvas } from "./service";
+import { activeEditMeme, fabricCanvas, GENERATED_MEMES, imageArray, setActiveEditMeme, setFabricCanvas } from "./service";
 import { returnMemeEditor } from "./template";
 import { setupEditDialogEvents, setupEditorEvents } from "./eventListener";
 import { saveToIndexDb, STORES } from "./indexDb";
@@ -17,7 +17,8 @@ import { saveToIndexDb, STORES } from "./indexDb";
  * @param {number} i - Index of the template image in imageArray
  */
 export async function openEdit(i) {
-
+  setActiveEditMeme(imageArray[i].name)
+  console.log("active name", activeEditMeme)
   const dialogContainer = document.getElementById('dialog-container')
   const dialog = document.getElementById("meme-edit-dialog");
   dialog.innerHTML = returnMemeEditor();
@@ -132,8 +133,9 @@ export async function exportMeme(fabricCanvas,callback) {
     quality: 1
   });
   const blob = await (await fetch(pngDataUrl)).blob();
-
-  const newMeme = new CustomMeme(blob, import.meta.env.VITE_TEAM_NAME)
+  const teamName = import.meta.env.VITE_TEAM_NAME
+  console.log(name)
+  const newMeme = new CustomMeme(blob,activeEditMeme,teamName )
   GENERATED_MEMES.push(newMeme)
   console.log(GENERATED_MEMES)
   saveToIndexDb(STORES.MEMES, newMeme)

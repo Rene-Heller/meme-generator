@@ -35,7 +35,6 @@ export async function loadTemplates() {
         if (cachedTemplates.length > 0) {
             loadFromIndexDB = true
             images = createLocalUrl(cachedTemplates)
-            // images = createLocalUrl(generatedTemplates)
         } else {
             const { data: files, error } = await supabase.storage
                 .from('meme-templates')

@@ -213,19 +213,6 @@ footer {
         &:hover {
             background-color: #09232d;
 
-            svg path {
-                fill: #fd5b4f;
-            }
-        }
-
-        svg {
-            width: 3rem;
-            height: 3rem;
-
-            path {
-                fill: #99acb3;
-                transition: fill 0.2s ease;
-            }
         }
 
         &--prev {
@@ -238,6 +225,10 @@ footer {
 
         &.hidden {
             display: none;
+        }
+
+        img{
+            height: 50%;
         }
     }
 }

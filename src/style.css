@@ -306,17 +306,6 @@ footer > div > p {
 .generated-dialog__nav-btn:hover {
   background-color: #09232d;
 }
-.generated-dialog__nav-btn:hover svg path {
-  fill: #fd5b4f;
-}
-.generated-dialog__nav-btn svg {
-  width: 3rem;
-  height: 3rem;
-}
-.generated-dialog__nav-btn svg path {
-  fill: #99acb3;
-  transition: fill 0.2s ease;
-}
 .generated-dialog__nav-btn--prev {
   transform: rotate(-90deg);
 }
@@ -325,6 +314,9 @@ footer > div > p {
 }
 .generated-dialog__nav-btn.hidden {
   display: none;
+}
+.generated-dialog__nav-btn img {
+  height: 50%;
 }
 
 @media screen and (max-width: 1200px) {
