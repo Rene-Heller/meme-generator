@@ -15,7 +15,6 @@ document.querySelector('#app').innerHTML = `
 <div id="templateSelect"></div>
 <div id="upload-container">
 
-
 `;
 
 /**
@@ -31,14 +30,14 @@ function closeDialog() {
  * Loads meme templates from Supabase and sets up navigation event listeners.
  * @async
  */
-async function init(){
+async function init() {
   await loadTemplates();
   setupNavigationEvents();
   if (!LOADED_GENERATED_FROM_INDEXED) {
-      await loadGeneratedMemesFromIndexDb()
-      setGeneratedLoadingState();
-    }
-  
+    await loadGeneratedMemesFromIndexDb()
+    setGeneratedLoadingState();
+  }
+
 };
 
 init()

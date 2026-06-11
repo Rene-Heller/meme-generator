@@ -5,3 +5,5 @@ dodged
 .env
 sandbox.html
 dist
+README.md
+supabase copy.js

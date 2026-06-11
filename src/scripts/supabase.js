@@ -3,20 +3,22 @@
  */
 
 import { createClient } from '@supabase/supabase-js';
-import { FAVORITE_MEMES, imageArray } from './service';
+import { FAVORITE_MEMES, GENERATED_MEMES, imageArray } from './service';
 import { renderFavTemplates, renderTemplates } from './template';
 import { setupOpenEditMemeEvents } from './eventListener';
 import { getAll, saveToIndexDb, STORES } from './indexDb';
 import { createLocalUrl } from './utils';
 
-//
-//
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
+const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY
 
 /**
  * Supabase client instance for cloud storage operations.
  * @type {SupabaseClient}
  */
-// export const supabase = //
+//
+// Client für Supabase erstellen
+//
 
 /**
  * Loads meme templates from Supabase storage.
@@ -37,11 +39,7 @@ export async function loadTemplates() {
             images = createLocalUrl(cachedTemplates, imageArray)
         } else {
             //
-            //
-            //
-            //
-            //
-            //
+            // Vom Supabase Storage Bucket `meme-templates laden`
             //
             images = await getImageFiles(imageArray, files, "meme-templates");
             if (error) {
@@ -68,12 +66,17 @@ async function getImageFiles(list, files, key) {
     const store = key === 'meme-templates' ? STORES.TEMPLATES : STORES.FAV
     files.map((file) => {
         //
+        // Von jedem File die PublicUrl fetchen
         //
-        //
-        //
-        //
-        //
-        //
+        if (!file.name.includes('.emptyFolderPlaceholder')) {
+
+            list.push(
+                {
+                    ...file,
+                    publicUrl,
+                }
+            )
+        }
     });
     for (const element of list) {
         const response = await fetch(element.publicUrl);
@@ -91,23 +94,23 @@ async function getImageFiles(list, files, key) {
 };
 
 
-export async function uploadTemplate(file) {
-    const extension = file.name.split('.').pop();
-    const fileName = `${file.author}+${file.id}.${extension}`;
+// export async function uploadTemplate(file) {
+//     const extension = file.name.split('.').pop();
+//     const fileName = `${file.author}+${file.id}.${extension}`;
 
-    const { data, error } = await supabase.storage
-        .from('custom_memes')
-        .upload(fileName, file.blob, {
-            cacheControl: '3600',
-            upsert: false,
-            contentType: file.blob.type
-        });
+//     const { data, error } = await supabase.storage
+//         .from('custom_memes')
+//         .upload(fileName, file.blob, {
+//             cacheControl: '3600',
+//             upsert: false,
+//             contentType: file.blob.type
+//         });
 
-    if (error) {
-        return;
-    }
+//     if (error) {
+//         return;
+//     }
 
-}
+// }
 
 
 export async function loadFavs() {
@@ -121,11 +124,7 @@ export async function loadFavs() {
             images = createLocalUrl(cachedTemplates, FAVORITE_MEMES)
         } else {
             //
-            //
-            //
-            //
-            //
-            //
+            // Vom Supabase Storage Bucket `custom_memes` laden --> Erstmal auslassen :)
             //
             images = await getImageFiles(FAVORITE_MEMES, files, "custom_memes");
             if (error) {
