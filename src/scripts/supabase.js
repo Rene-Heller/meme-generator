@@ -9,14 +9,14 @@ import { setupOpenEditMemeEvents } from './eventListener';
 import { getAll, saveToIndexDb, STORES } from './indexDb';
 import { createLocalUrl } from './utils';
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
-const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY
+//
+//
 
 /**
  * Supabase client instance for cloud storage operations.
  * @type {SupabaseClient}
  */
-export const supabase = createClient(supabaseUrl, supabaseKey);
+// export const supabase = //
 
 /**
  * Loads meme templates from Supabase storage.
@@ -36,9 +36,13 @@ export async function loadTemplates() {
             loadFromIndexDB = true
             images = createLocalUrl(cachedTemplates, imageArray)
         } else {
-            const { data: files, error } = await supabase.storage
-                .from("meme-templates")
-                .list();
+            //
+            //
+            //
+            //
+            //
+            //
+            //
             images = await getImageFiles(imageArray, files, "meme-templates");
             if (error) {
                 return;
@@ -63,16 +67,13 @@ async function getImageFiles(list, files, key) {
     if (list.length > 0) return list
     const store = key === 'meme-templates' ? STORES.TEMPLATES : STORES.FAV
     files.map((file) => {
-        const { data: { publicUrl } } = supabase.storage.from(key).getPublicUrl(file.name);
-        if (!file.name.includes('.emptyFolderPlaceholder')) {
-
-            list.push(
-                {
-                    ...file,
-                    publicUrl,
-                }
-            )
-        }
+        //
+        //
+        //
+        //
+        //
+        //
+        //
     });
     for (const element of list) {
         const response = await fetch(element.publicUrl);
@@ -119,9 +120,13 @@ export async function loadFavs() {
             loadFromIndexDB = true
             images = createLocalUrl(cachedTemplates, FAVORITE_MEMES)
         } else {
-            const { data: files, error } = await supabase.storage
-                .from("custom_memes")
-                .list();
+            //
+            //
+            //
+            //
+            //
+            //
+            //
             images = await getImageFiles(FAVORITE_MEMES, files, "custom_memes");
             if (error) {
                 return;
