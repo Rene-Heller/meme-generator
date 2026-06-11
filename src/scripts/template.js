@@ -17,25 +17,25 @@ import { getFileSrc } from "./utils";
 export function returnMemeEditor() {
   return `
         <div class="editor-toolbar">
-    
+
           <button id="addTextBtn">
             Text hinzufügen
           </button>
-    
+
           <input type="color" id="fillColor" value="#ffffff">
-    
+
           <input type="color" id="strokeColor" value="#000000">
-    
+
           <button id="exportBtn">
             Generate
           </button>
-    
+
           <button id="close-dialog-btn" >
             X
           </button>
-    
+
         </div>
-    
+
         <canvas id="meme-editor" tabindex="1"></canvas>
       `
 };
@@ -87,9 +87,9 @@ export function renderTemplates(fileList, loadedFromIndexDB = false) {
     const srcUrl = getFileSrc(file, loadedFromIndexDB)
     templateSelect.innerHTML += `
   <button id="meme-${imageArray.indexOf(file)}" class="create-meme-btn">
-    <img class="template-meme" src="${srcUrl}" alt="">    
+    <img class="template-meme" src="${srcUrl}" alt="">
   </button>
-     
+
   `
   });
   setupOpenEditMemeEvents();
@@ -106,8 +106,8 @@ export function renderFavTemplates(fileList, loadedFromIndexDB = false) {
     const srcUrl = getFileSrc(file, loadedFromIndexDB)
     templateSelect.innerHTML += `
   <button id="meme-${imageArray.indexOf(file)}" class="create-meme-btn">
-    <img class="template-meme" src="${srcUrl}" alt="">    
-  </button>  
+    <img class="template-meme" src="${srcUrl}" alt="">
+  </button>
   `
   });
 
@@ -118,7 +118,7 @@ export function renderFavTemplates(fileList, loadedFromIndexDB = false) {
 export function refreshHeartCounter() {
   const counter = document.getElementById('heart-count')
   counter.innerText = LIKES
-  if (LIKES === 2) {
+  if (LIKES === 4) {
     counter.style.color = "red"
   } else {
     counter.style.color = "white"
@@ -135,7 +135,7 @@ export function returnGeneratedMemeDialog(List, index) {
             class="${index === 0 ? `d-none` : ''} generated-dialog__nav-btn generated-dialog__nav-btn--prev">
             <div></div>
         </button>
-        <button id="like-${index}" onclick="handleLike(${index})" class="like-btn ${LIKES === 2 && !List[index].liked ? 'cursor-forbidden' : ''} ${List === FAVORITE_MEMES ? 'd-none' : ''}">
+        <button id="like-${index}" onclick="handleLike(${index})" class="like-btn ${LIKES === 4 && !List[index].liked ? 'cursor-forbidden' : ''} ${List === FAVORITE_MEMES ? 'd-none' : ''}">
             <img id='like-icon' src="${List[index].liked ? 'src/assets/img/red-heart.png' : 'src/assets/img/empty-heart.png'}" alt="">
         </button>
         <button onclick="changeMeme(${index + 1})" id="right-arrow"

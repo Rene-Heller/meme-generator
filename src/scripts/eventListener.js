@@ -35,7 +35,7 @@ export const handleDialogEventSetup = (event) => {
   }
 }
 
-export function setupGeneratedDialogEvents(List,isFav=false) {
+export function setupGeneratedDialogEvents(List, isFav = false) {
   const buttons = document.querySelectorAll(".create-meme-btn");
   const container = document.getElementById('dialog-container');
 
@@ -122,7 +122,7 @@ export function setupNavigationEvents() {
 
     }
     else if (!GENERATED_MEMES[index].liked) {
-      if (LIKES === 2) return
+      if (LIKES === 4) return
       GENERATED_MEMES[index].liked = true;
       patchMeme(img, GENERATED_MEMES[index].liked, index)
     }

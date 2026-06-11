@@ -10,7 +10,7 @@ import { refreshHeartCounter } from "./template";
  * @type {Array<CustomMeme>}
  */
 export const GENERATED_MEMES = []
-export const FAVORITE_MEMES=[]
+export const FAVORITE_MEMES = []
 export let LOADED_GENERATED_FROM_INDEXED = false
 export let LIKES = 0
 
@@ -52,9 +52,9 @@ export function setLikes(number) {
 }
 
 export function handleLikeValue(liked) {
-  if (liked && LIKES >= 2) {
+  if (liked && LIKES >= 4) {
     return
-  } else if (liked && LIKES < 2) {
+  } else if (liked && LIKES < 4) {
     LIKES++
   } else if (!liked) {
     LIKES--
@@ -62,3 +62,18 @@ export function handleLikeValue(liked) {
   refreshHeartCounter()
 }
 
+function uploadFavorites() {
+  const uploaded = localStorage.getItem('uploaded');
+  if (uploaded) return console.error("Upload-Limit exceeded")
+  const favorites = GENERATED_MEMES.filter((element) => element.liked === true)
+  favorites.forEach((e) => {
+    uploadTemplate(e)
+  })
+  setTimeout(() => {
+    localStorage.setItem('uploaded', true);
+    const img = document.getElementById("upload-img");
+    img.setAttribute('src', 'src/assets/img/red-heart.png')
+    document.getElementById('upload-btn-text').innerText = 'Uploaded'
+  }, 3000)
+
+}
