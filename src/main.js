@@ -14,6 +14,11 @@ document.querySelector('#app').innerHTML = `
 </div>
 <div id="templateSelect"></div>
 <div id="upload-container">
+<button onclick="uploadFavorites()" id="upload-btn">
+    <img id="upload-img" src="src/assets/img/upload.png" alt="">
+    <p id="upload-btn-text">Upload</p>
+</div>
+</button>
 
 `;
 
