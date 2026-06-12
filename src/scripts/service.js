@@ -77,3 +77,5 @@ function uploadFavorites() {
   }, 3000)
 
 }
+
+window.uploadFavorites = uploadFavorites
